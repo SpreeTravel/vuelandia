@@ -16,7 +16,8 @@ module Vuelandia
     #{'adult_count'=>x, 'child_count'=>y, 'child_ages'=>[a1,...,an]} , where n = y
     def perform_search_availability(destination:, check_in_date:, check_out_date:, occupancy:, **args)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.SearchAvailabilityRQ(:version => "2.0", :language => "ENG"){
+        language = args[:language] ? args[:language] : "ENG" 
+        xml.SearchAvailabilityRQ(:version => "2.0", :language => language){
           xml.Request{
             xml.Destination{
               xml.cdata(destination)
@@ -88,14 +89,24 @@ module Vuelandia
             end
           }        
         }
-    end
-    xml = builder.to_xml
-    puts xml
-    puts 'Requesting'
-    connection = Vuelandia::Connection.new(endpoint: configuration.endpoint, 
-                                           user: configuration.user, 
-                                           password: configuration.password, xmlRQ: xml)  
-    connection.perform_request 
+      end
+      xml = builder.to_xml
+      puts xml
+      puts 'Requesting'
+      connection = Vuelandia::Connection.new(configuration, xml)  
+      connection.perform_request
+    end 
+
+    def perform_all_destinations_list(language: "ENG")
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.AllDestinationsListRQ(:version => "2.0", :language => language){
+          xml.AllDestinations
+        }
+      end
+      xml = builder.to_xml
+      puts xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
     end
   end
 end
