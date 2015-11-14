@@ -11,7 +11,7 @@ In your Gemfile, before a `bundle install`, add:
 **Note:** you'll need to replace `X.X.X` in the example above with the [latest gem version](https://rubygems.org/gems/vuelandia) visible in the badge above.
 
 Manually, via command line:
-
+	
     gem install vuelandia
 
 ## Usage
@@ -19,52 +19,49 @@ Manually, via command line:
 ### Create the connection to Vuelandia
 	client = Vuelandia::Client.new(user: "user", password: "pass"[, endpoint: :test, proxy: proxy])
 
-- endpoint can be either :test or :live 
-
-- proxy is a hash with keys :address, :port, :user, :password
+- endpoint can be either `:test` or `:live` 
+- proxy is a hash with keys `:address`, `:port`, `:user`, `:password`
 
 ### Perform the search
 	search = client.perform_XXX(parameters)
 
-- The reponse to a search is a Net::HTTP response and its body is the reponse xml to your query. You can use this xml however you want, but usually you would want to parse it
+- The reponse to a search is a `Net::HTTP` response and its body is the reponse XML to your query. You can use this XML however you want, but usually you would want to parse it
 
-### Parse the xml
+### Parse the XML
 	parser = Vuelandia::Parser.new
 	data = parser.parse_XXX(search.body, [type: type])
 
-- type can be :file but it's :string by default
+- `type` can be `:file` but it's `:string` by default
+- `data` is an object which properties depends on the query made
+- Format of parsed data depends on the type of query made.
 
-- data is an object which properties depends on the query made
+**Note:** you'll need to replace `XXX` in the examples above with the name of the query you want to perform
 
 ## Available queries
-##### (all queries begin with perform_)
 
-- search_availability
+- `perform_search_availability`
 	- Parameters
 		- Required
-			- :destination
-			- :check\_in\_date (format: 'YYYY-MM-DD')
-			- :check\_out\_date (format: 'YYYY-MM-DD')
-			- :occupancy
+			- `:destination`
+			- `:check\_in\_date` (format: 'YYYY-MM-DD')
+			- `:check\_out\_date` (format: 'YYYY-MM-DD')
+			- `:occupancy`
 		- Optional
-			- :language
-			- :hotel_list
-			- :destination_id
-			- :country_code
-			- :hotel_information
-			- :filters
+			- `:language`
+			- `:hotel_list`
+			- `:destination_id`
+			- `:country_code`
+			- `:hotel_information`
+			- `:filters`
 
 		- Info 
-			- :occupancy is an array of rooms where each room is a hash with the following structure
-				{ adult\_count: x, child\_count: y, child\_ages: [a1...ay] }
+			- `:occupancy` is an array of rooms where each room is a hash with the following structure
+				`{ adult_count: x, child_count: y, child_ages: [a1...ay] }`
 
-- all\_destinations\_list
+- `all_destinations_list`
 	- Parameters
-		- Required
-			- (NONE)
 		- Optional
-			- :language
-
+			- `:language`
 
 ## Contributing
 

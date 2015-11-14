@@ -12,8 +12,6 @@ module Vuelandia
       freeze
     end
 
-    #occupancy must be an array of rooms where each room is a hash with the next structure
-    #{'adult_count'=>x, 'child_count'=>y, 'child_ages'=>[a1,...,ay]} 
     def perform_search_availability(destination:, check_in_date:, check_out_date:, occupancy:, **args)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         language = args[:language] ? args[:language] : "ENG" 
@@ -27,11 +25,11 @@ module Vuelandia
             occupancy.each do |room|
               xml.Occupancy{
                 xml.Rooms_ 1
-                xml.Adults_ room['adult_count']
-                xml.Children_ room['child_count']
-                if room['child_count'] > 0
+                xml.Adults_ room[:adult_count]
+                xml.Children_ room[:child_count]
+                if room[:child_count] > 0
                   xml.Ages{
-                    room['child_ages'].each do |age|
+                    room[:child_ages].each do |age|
                       xml.Age_ age
                     end
                   }

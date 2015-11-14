@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Mario Muniz"]
   spec.email         = ["mario462@gmail.com"]
   spec.summary       = %q{Interfaces with the Vuelandia API to book hotel rooms}
+  spec.summary       = %q{Interfaces with the Vuelandia API to book hotel rooms using Nokogiri to build and parse XML and Net::HTTP to make a POST to the website}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -17,5 +18,5 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "nokogiri"
+  spec.add_dependency "nokogiri", '~> 1.6'
 end
