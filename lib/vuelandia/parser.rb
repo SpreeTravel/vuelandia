@@ -160,10 +160,6 @@ module Vuelandia
 			elsif type == :string
 				doc = Nokogiri::XML(all_destinations_list)
 			end
-			#######data is an array of Country#########
-			#each Country has an ID, a Name and Destinations, where Destinations is a Destination array
-			#each Destination has an ID, a Name and Zones, where Zones is a Zone array
-			#each Zone has an ID and a Name 
 			data = []
 			doc.css('Country').each do |c|
 				country = Country.new

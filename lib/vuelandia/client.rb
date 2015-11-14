@@ -95,6 +95,24 @@ module Vuelandia
       connection.perform_request
     end 
 
+    def perform_additional_information(obj:, datos:, language: "ENG", **args)
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.AdditionalInformationRQ(:version => "2.0", :language => language){
+          xml.Request{
+            xml.obj_ obj
+            xml.DATOS_ datos
+            unless args[:ShowMoreRates].nil?
+              xml.ShowMoreRates_ 'Y'
+            end
+          }
+        }
+      end
+      xml = builder.to_xml
+      puts xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
+
     def perform_all_destinations_list(language: "ENG")
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.AllDestinationsListRQ(:version => "2.0", :language => language){
