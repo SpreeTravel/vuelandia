@@ -33,7 +33,7 @@ class Hotel
 	#######Optional#######
 	attr_accessor :Category, :City, :Latitud, :Longitud, :Photo, :ImportantNote
 	#######Required#######
-	attr_accessor :HotelDetails
+	attr_accessor :HotelDetails, :Rooms
 end
 
 class HotelDetails
@@ -48,7 +48,20 @@ class Photo
 	attr_accessor :Width, :Height, :URL
 end
 
-class Accommodations
-	attr_accessor :Room
+class Room
+	attr_accessor :RoomType, :Boards
+end
+
+class RoomType
+	attr_accessor :ID, :Name, :Amenities, :NumberRooms
+end
+
+class Amenity
+	attr_accessor :ID, :Name
+end
+
+class Board
+	attr_accessor :IDItem, :Board_type, :Currency, :Price, :PriceAgency, :DirectPayment, :DATOS,
+				  :StrokePrice, :Offer, :Refundable
 end
 ###########################################################################################

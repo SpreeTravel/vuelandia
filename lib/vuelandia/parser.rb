@@ -92,9 +92,59 @@ module Vuelandia
 						hotel.ImportantNote = h.at_css('ImportantNote').content
 					end
 
+					######Setting Rooms########
 					a = h.at_css('Accommodations')
+					hotel.Rooms = []
 					a.css('Room').each do |r|
-						
+						room = Room.new
+
+						######Setting RoomType#######
+						rt = r.at_css('RoomType')
+						room_type = RoomType.new
+						room_type.ID = rt.at_css('ID').content
+						room_type.Name = rt.at_css('Name').content
+						room_type.NumberRooms = rt.at_css('NumberRooms').content
+						am = rt.at_css('Amenities')
+						unless am.nil?
+							room_type.Amenities = []
+							am = am.css('Amenity')
+							unless am.nil?
+								am.each do |a|
+									amenity = Amenity.new
+									amenity.ID = a.at_css('ID').content
+									unless a.at_css('Name').nil?
+										amenity.Name = a.at_css('Name').content
+									end
+									room_type.Amenities << amenity
+								end
+							end							
+						end
+						room.RoomType = room_type
+						###############################
+
+						#######Setting Boards##########
+						room.Boards = []
+						r.css('Board').each do |b|
+							board = Board.new
+							unless b.at_css('IDItem').nil?
+								board.IDItem = b.at_css('IDItem').content
+							end
+							board.Board_type = b.at_css('Board_type').at_css('ID').content
+							board.Currency = b.at_css('Currency').content
+							board.Price = b.at_css('Price').content
+							board.PriceAgency = b.at_css('PriceAgency').content
+							board.DirectPayment = b.at_css('DirectPayment').content
+							board.DATOS = b.at_css('DATOS').content
+							unless b.at_css('StrokePrice').nil?
+								board.StrokePrice = b.at_css('StrokePrice').content
+							end
+							board.Offer = b.at_css('Offer').content
+							board.Refundable = b.at_css('Refundable').content
+							room.Boards << board
+						end
+						###############################
+
+						hotel.Rooms << room
 					end					
 					
 					data.Hotels << hotel

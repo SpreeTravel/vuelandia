@@ -13,7 +13,7 @@ module Vuelandia
     end
 
     #occupancy must be an array of rooms where each room is a hash with the next structure
-    #{'adult_count'=>x, 'child_count'=>y, 'child_ages'=>[a1,...,an]} , where n = y
+    #{'adult_count'=>x, 'child_count'=>y, 'child_ages'=>[a1,...,ay]} 
     def perform_search_availability(destination:, check_in_date:, check_out_date:, occupancy:, **args)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         language = args[:language] ? args[:language] : "ENG" 
