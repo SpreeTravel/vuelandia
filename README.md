@@ -57,7 +57,14 @@ Manually, via command line:
 		- Info 
 			- `:occupancy` is an array of rooms where each room is a hash with the following structure
 				`{ adult_count: x, child_count: y, child_ages: [a1...ay] }`
-
+- `perform_additional_information`
+	- Parmeters
+		- Required
+			- `:obj`
+			- `:datos`
+		- Optional
+			- `:language`
+			- `:show_more_rates`
 - `all_destinations_list`
 	- Parameters
 		- Optional

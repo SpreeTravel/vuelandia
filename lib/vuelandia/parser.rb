@@ -3,12 +3,40 @@ require_relative 'classes'
 
 module Vuelandia
 	class Parser
-		def parse_search_availability(search_availability, type: :string)
-			if type == :file
-				doc = File.open(search_availability) { |f| Nokogiri::XML(f) }
-			else
-				doc = Nokogiri::XML(search_availability)
+		def parse_all_destinations_list(all_destinations_list, type: :string)
+			doc = to_nokogiri(all_destinations_list, type)
+			data = []
+			doc.css('Country').each do |c|
+				country = Country.new
+				country.ID = c.at_css('ID').content
+				country.Name = c.at_css('Name').content
+				country.Destinations = []				
+				dest = c.at_css('Destinations')
+				unless dest.nil? || dest.children.empty?
+					dest.css('Destination').each do |d|
+						destination = Destination.new
+						destination.ID = d.at_css('ID').content
+						destination.Name = d.at_css('Name').content
+						destination.Zones = []
+						zon = d.at_css('Zones')
+						unless zon.nil? || zon.children.empty? 
+							zon.css('Zone').each do |z|
+								zone = Zone.new
+								zone.ID = z.at_css('ID').content
+								zone.Name = z.at_css('Name').content
+								destination.Zones << zone
+							end
+						end
+						country.Destinations << destination
+					end
+				end
+				data << country
 			end
+			data
+		end
+
+		def parse_search_availability(search_availability, type: :string)
+			doc = to_nokogiri(search_availability, type)
 			if doc.at_css('MultiplesResults')
 				data = parse_search_availability_multiple(doc)	
 				return { multiple: true, data: data }
@@ -18,11 +46,24 @@ module Vuelandia
 			end
 		end
 
+		def parse_additional_information(additional_information, type: :string)
+			doc = to_nokogiri(additional_information, type)
+#######################HERE######################33
+		end
+
 		private
+		def to_nokogiri(document, type)
+			if type == :file
+				File.open(additional_information) { |f| Nokogiri::XML(f) }
+			else
+				Nokogiri::XML(additional_information)
+			end
+		end
+
 		def parse_search_availability_multiple(doc)
 			data = []
 			doc.css('Result').each do |res|
-				result = MultipleData.new
+				result = MultipleDataParsed.new
 				result.Type = res.at_css('Type').content
 				result.Name = res.at_css('Name').content
 				unless res.at_css('Destination').nil?
@@ -42,7 +83,7 @@ module Vuelandia
 
 		def parse_search_availability_unique(doc)
 			doc = doc.at_css('Response')
-			data = UniqueData.new
+			data = UniqueDataParsed.new
 			data.obj = doc.at_css('obj').content
 			data.TotalDestinationHotels = doc.at_css('TotalDestinationHotels').content
 			data.AvailablesHotel = doc.at_css('AvailablesHotel').content
@@ -152,42 +193,5 @@ module Vuelandia
 			end
 			data
 		end	
-		
-		public
-		def parse_all_destinations_list(all_destinations_list, type: :string)
-			if type == :file
-				doc = File.open(all_destinations_list) { |f| Nokogiri::XML(f) }
-			elsif type == :string
-				doc = Nokogiri::XML(all_destinations_list)
-			end
-			data = []
-			doc.css('Country').each do |c|
-				country = Country.new
-				country.ID = c.at_css('ID').content
-				country.Name = c.at_css('Name').content
-				country.Destinations = []				
-				dest = c.at_css('Destinations')
-				unless dest.nil? || dest.children.empty?
-					dest.css('Destination').each do |d|
-						destination = Destination.new
-						destination.ID = d.at_css('ID').content
-						destination.Name = d.at_css('Name').content
-						destination.Zones = []
-						zon = d.at_css('Zones')
-						unless zon.nil? || zon.children.empty? 
-							zon.css('Zone').each do |z|
-								zone = Zone.new
-								zone.ID = z.at_css('ID').content
-								zone.Name = z.at_css('Name').content
-								destination.Zones << zone
-							end
-						end
-						country.Destinations << destination
-					end
-				end
-				data << country
-			end
-			data
-		end
 	end
 end

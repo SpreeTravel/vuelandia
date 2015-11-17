@@ -101,7 +101,7 @@ module Vuelandia
           xml.Request{
             xml.obj_ obj
             xml.DATOS_ datos
-            unless args[:ShowMoreRates].nil?
+            unless args[:show_more_rates].nil?
               xml.ShowMoreRates_ 'Y'
             end
           }

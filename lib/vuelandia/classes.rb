@@ -14,7 +14,7 @@ end
 
 
 ##################TO RETURN THE DATA WHEN AVAILABILITY RETURNS MULTIPLE RESULTS############
-class MultipleData
+class MultipleDataParsed
 	attr_accessor :Type, :Name, :Destination, :Country, :AdditionalsParameters
 end
 
@@ -25,7 +25,7 @@ end
 
 
 ##################TO RETURN THE DATA WHEN AVAILABILITY RETURNS A UNIQUE RESULT#############
-class UniqueData
+class UniqueDataParsed
 	attr_accessor :obj, :TotalDestinationHotels, :AvailablesHotel, :SessionID, :Hotels
 end
 
@@ -65,3 +65,46 @@ class Board
 				  :StrokePrice, :Offer, :Refundable
 end
 ###########################################################################################
+
+################TO RETURN THE DATA FOR ADDITIONAL INFORMATION##############################
+class AdditionalInformationParsed
+	attr_accessor :HotelDetails, :SearchAvailabilityDetails, :AgencyBalance, :AdditionalInformation,
+				  :PVP, :PriceAgency, :PendingPayments, :PendingPaymentsDeadline	
+end
+
+class HotelDetails
+	attr_accessor :ID, :Name, :Category, :Address, :City, :Location, :Photo
+end
+
+class Location
+	attr_accessor :Country, :Destination, :Zone
+end
+
+class SearchAvailabilityDetails
+	attr_accessor :Check_in_date, :Check_in_day_of_week, :Check_out_date, :Check_out_day_of_week,
+				  :Days, :RoomID, :Occupancy, :RoomName, :BoardID, :BoardName  
+end
+
+class Occupancy
+	attr_accessor :Rooms, :Adults, :Children
+end
+
+class RoomName
+	attr_accessor :numberOfRooms
+end
+
+class AdditionalInformation
+	attr_accessor :status, :CommentsAllow, :Rooms, :CancellationPeriod, :Suplements, :Discounts,
+				  :Offers, :EssentialInformation, :fechaInicioCancelacion, :horaInicioCancelacion,
+				  :fechaLimiteSinGastos, :horaLimiteSinGastos 
+end
+
+class RoomAdditional
+	attr_accessor :RoomID, :From, :To, :numberOfRooms, :Adults, :Children, :BoardID, :Price, :PriceAgency
+end
+
+class CancellationPeriod
+	attr_accessor :From, :To, :Hour, :Amount, :PriceAgency
+end
+###########################################################################################
+
