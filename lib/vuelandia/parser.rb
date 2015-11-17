@@ -48,7 +48,7 @@ module Vuelandia
 
 		def parse_additional_information(additional_information, type: :string)
 			doc = to_nokogiri(additional_information, type)
-#######################HERE######################33
+			#######################TODO######################
 		end
 
 		private

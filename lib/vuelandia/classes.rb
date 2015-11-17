@@ -69,7 +69,7 @@ end
 ################TO RETURN THE DATA FOR ADDITIONAL INFORMATION##############################
 class AdditionalInformationParsed
 	attr_accessor :HotelDetails, :SearchAvailabilityDetails, :AgencyBalance, :AdditionalInformation,
-				  :PVP, :PriceAgency, :PendingPayments, :PendingPaymentsDeadline	
+				  :PVP, :PriceAgency, :Rates	
 end
 
 class HotelDetails
@@ -90,13 +90,17 @@ class Occupancy
 end
 
 class RoomName
-	attr_accessor :numberOfRooms
+	attr_accessor :numberOfRooms, :RoomID, :Name
+end
+
+class AgencyBalance
+	attr_accessor :Balance, :Credit, :AmountAvailable
 end
 
 class AdditionalInformation
 	attr_accessor :status, :CommentsAllow, :Rooms, :CancellationPeriod, :Suplements, :Discounts,
 				  :Offers, :EssentialInformation, :fechaInicioCancelacion, :horaInicioCancelacion,
-				  :fechaLimiteSinGastos, :horaLimiteSinGastos 
+				  :fechaLimiteSinGastos, :horaLimiteSinGastos, :PaymentTypes 
 end
 
 class RoomAdditional
@@ -105,6 +109,26 @@ end
 
 class CancellationPeriod
 	attr_accessor :From, :To, :Hour, :Amount, :PriceAgency
+end
+
+class SuplementOrDiscount
+	attr_accessor :From, :To, :Obligatory, :Type, :Description, :Paxes_number, :Price, :PriceAgency
+end
+
+class Offer
+	attr_accessor :Name, :Description
+end
+
+class Information
+	attr_accessor :From, :To, :Description
+end
+
+class PaymentType
+	attr_accessor :Code, :Name
+end
+
+class Rate
+	attr_accessor :DATOS, :IDHotel, :Price, :PriceAgency, :RefundableCode, :AdditionalInformation
 end
 ###########################################################################################
 
