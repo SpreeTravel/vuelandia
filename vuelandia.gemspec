@@ -6,8 +6,8 @@ require "vuelandia/version"
 Gem::Specification.new do |spec|
   spec.name          = "vuelandia"
   spec.version       = Vuelandia::VERSION
-  spec.authors       = ["Mario Muniz"]
-  spec.email         = ["mario462@gmail.com"]
+  spec.authors       = ["Mario Muniz", "Raúl Perez-Alejo"]
+  spec.email         = ["mario462@gmail.com", "rperezalejo@openjaf.com"]
   spec.summary       = %q{Interfaces with the Vuelandia API to book hotel rooms}
   spec.summary       = %q{Interfaces with the Vuelandia API to book hotel rooms using Nokogiri to build and parse XML and Net::HTTP to make a POST to the website}
   spec.homepage      = ""
