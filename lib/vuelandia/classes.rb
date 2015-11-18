@@ -80,6 +80,10 @@ class Location
 	attr_accessor :Country, :Destination, :Zone
 end
 
+class CountryDestinationZone
+	attr_accessor :ID, :Name
+end
+
 class SearchAvailabilityDetails
 	attr_accessor :Check_in_date, :Check_in_day_of_week, :Check_out_date, :Check_out_day_of_week,
 				  :Days, :RoomID, :Occupancy, :RoomName, :BoardID, :BoardName  

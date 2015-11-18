@@ -48,7 +48,45 @@ module Vuelandia
 
 		def parse_additional_information(additional_information, type: :string)
 			doc = to_nokogiri(additional_information, type)
-			#######################TODO######################
+			data = AdditionalInformationParsed.new
+			hd = HotelDetails.new
+				css_hd = doc.at_css('HotelDetails')
+				hd.ID = css_hd.at_css('ID').content
+				hd.Name = css_hd.at_css('Name').content
+				cat = Category.new
+					css_cat = css_hd.at_css('Category')
+					cat.ID = css_cat.at_css('ID').content
+					cat.Name = css_cat.at_css('Name').content
+				hd.Category = cat
+				hd.Address = css_hd.at_css('Address').content
+				hd.City = css_hd.at_css('City').content
+				loc = Location.new
+					css_loc = css_hd.at_css('Location')
+					loc_country = CountryDestinationZone.new
+					css_loc_country = css_loc.at_css('Country')
+					loc_country.ID = css_loc_country.at_css('ID').content
+					loc_country.Name = css_loc_country.at_css('Name').content
+					loc.Country = loc_country
+					
+					loc_destination = CountryDestinationZone.new
+					css_loc_destination = css_loc.at_css('Destination')
+					loc_destination.ID = css_loc_destination.at_css('ID').content
+					loc_destination.Name = css_loc_destination.at_css('Name').content
+					loc.Destination = loc_destination
+		
+					loc_zone = CountryDestinationZone.new
+					css_loc_zone = css_loc.at_css('Zone')
+					loc_zone.ID = css_loc_zone.at_css('ID').content
+					loc_zone.Name = css_loc_zone.at_css('Name').content
+					loc.Zone = loc_zone
+				hd.Location = loc
+				photo = Photo.new
+					css_photo = css_hd.at_css('Photo')
+					photo.Width = css_photo.at_css('Width').content
+					photo.Height = css_photo.at_css('Height').content
+					photo.URL = css_photo.at_css('URL').content
+				hd.Photo = photo
+			data.HotelDetails = hd
 		end
 
 		private
