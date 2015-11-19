@@ -89,8 +89,6 @@ module Vuelandia
         }
       end
       xml = builder.to_xml
-      puts xml
-      puts 'Requesting'
       connection = Vuelandia::Connection.new(configuration, xml)  
       connection.perform_request
     end 
@@ -108,7 +106,52 @@ module Vuelandia
         }
       end
       xml = builder.to_xml
-      puts xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
+
+    def perform_booking_confirmation(obj:, datos:, client:, language: "ENG")
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.BookingConfirmationRQ(:version => "2.0", :language => language){
+          xml.Request{
+            xml.obj_ obj
+            xml.DATOS_ datos
+            xml.client{
+              xml.name_ client.name
+              xml.surnames_ client.surnames
+              (xml.documentNumber_ client.documentNumber) unless client.documentNumber.nil?
+              (xml.country_ client.country) unless client.country.nil?
+              (xml.region_ client.region) unless client.region.nil?
+              (xml.EMail_ client.EMail) unless client.EMail.nil?
+              (xml.PostCode_ client.PostCode) unless client.PostCode.nil?
+              (xml.Phone_ client.Phone) unless client.Phone.nil?
+            }
+            unless args[:company].nil?
+              co = args[:company]
+              xml.company{
+                xml.nameCompany_ co.nameCompany
+                xml.cifCompany_ co.cifCompany
+                xml.addressCompany_ co.addressCompany
+                xml.postalCodeCompany_ co.postalCodeCompany
+                xml.ProvinceCompany_ co.ProvinceCompany
+                xml.regionCompany_ co.regionCompany
+              }
+            end
+            xml.payment{
+              xml.Type_ "SL"
+            }
+            unless args[:comment].nil?
+              xml.comment{
+                xml.text_ args[:comment]                
+              }
+            end
+            unless args[:Reference].nil?
+              xml.Reference_ args[:Reference]
+            end            
+          }
+        }
+      end
+      xml = builder.to_xml
       connection = Vuelandia::Connection.new(configuration, xml)
       connection.perform_request
     end
@@ -120,7 +163,6 @@ module Vuelandia
         }
       end
       xml = builder.to_xml
-      puts xml
       connection = Vuelandia::Connection.new(configuration, xml)
       connection.perform_request
     end

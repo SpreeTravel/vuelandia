@@ -136,3 +136,14 @@ class Rate
 end
 ###########################################################################################
 
+##############TO PERFORM A BOOKING CONFIRMATION############################################
+class Client
+	attr_accessor :name, :surnames, :documentNumber, :country, :region, :EMail, :PostCode, :Phone
+end
+
+class Company
+	attr_accessor :nameCompany, :cifCompany, :addressCompany, :postalCodeCompany,
+				  :ProvinceCompany, :regionCompany
+end
+###########################################################################################
+
