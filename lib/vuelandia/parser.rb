@@ -137,6 +137,27 @@ module Vuelandia
 			data
 		end
 
+		def parse_booking_confirmation(booking_confirmation, type)
+			doc = to_nokogiri(booking_confirmation, type)
+			data = BookingConfirmationParsed.new
+			data.ReservationStatus = doc.at_css('ReservationStatus').content
+			data.PaymentStatus = doc.at_css('PaymentStatus').content
+			data.ConfirmationStatus = doc.at_css('ConfirmationStatus').content
+			data.BookingID = doc.at_css('BookingID').content
+			data.SecurityCode = doc.at_css('SecurityCode').content
+			data.ERROR = doc.at_css('ERROR').nil? ? 0 : 1
+			data.Errors = []
+			unless doc.at_css('Errors').nil?
+				doc.at_css('Errors').css('Error').each do |e|
+					error = Error.new
+					error.type = e['type']
+					error.message = e.content
+					data.Errors << error
+				end
+			end
+			data
+		end
+
 		private
 		def to_nokogiri(document, type)
 			if type == :file

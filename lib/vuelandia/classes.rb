@@ -136,7 +136,7 @@ class Rate
 end
 ###########################################################################################
 
-##############TO PERFORM A BOOKING CONFIRMATION############################################
+##############TO PERFORM AND PARSE A BOOKING CONFIRMATION##################################
 class Client
 	attr_accessor :name, :surnames, :documentNumber, :country, :region, :EMail, :PostCode, :Phone
 end
@@ -144,6 +144,15 @@ end
 class Company
 	attr_accessor :nameCompany, :cifCompany, :addressCompany, :postalCodeCompany,
 				  :ProvinceCompany, :regionCompany
+end
+
+class BookingConfirmationParsed
+	attr_accessor :ReservationStatus, :PaymentStatus, :ConfirmationStatus, :BookingID,
+				  :SecurityCode, :ERROR, :Errors
+end 
+
+class Error
+	attr_accessor :type, :message
 end
 ###########################################################################################
 
