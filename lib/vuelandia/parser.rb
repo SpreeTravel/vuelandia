@@ -63,21 +63,21 @@ module Vuelandia
 				loc = Location.new
 					css_loc = css_hd.at_css('Location')
 					loc_country = CountryDestinationZone.new
-					css_loc_country = css_loc.at_css('Country')
-					loc_country.ID = css_loc_country.at_css('ID').content
-					loc_country.Name = css_loc_country.at_css('Name').content
+						css_loc_country = css_loc.at_css('Country')
+						loc_country.ID = css_loc_country.at_css('ID').content
+						loc_country.Name = css_loc_country.at_css('Name').content
 					loc.Country = loc_country
-					
+						
 					loc_destination = CountryDestinationZone.new
-					css_loc_destination = css_loc.at_css('Destination')
-					loc_destination.ID = css_loc_destination.at_css('ID').content
-					loc_destination.Name = css_loc_destination.at_css('Name').content
+						css_loc_destination = css_loc.at_css('Destination')
+						loc_destination.ID = css_loc_destination.at_css('ID').content
+						loc_destination.Name = css_loc_destination.at_css('Name').content
 					loc.Destination = loc_destination
-		
+			
 					loc_zone = CountryDestinationZone.new
-					css_loc_zone = css_loc.at_css('Zone')
-					loc_zone.ID = css_loc_zone.at_css('ID').content
-					loc_zone.Name = css_loc_zone.at_css('Name').content
+						css_loc_zone = css_loc.at_css('Zone')
+						loc_zone.ID = css_loc_zone.at_css('ID').content
+						loc_zone.Name = css_loc_zone.at_css('Name').content
 					loc.Zone = loc_zone
 				hd.Location = loc
 				photo = Photo.new
@@ -87,6 +87,24 @@ module Vuelandia
 					photo.URL = css_photo.at_css('URL').content
 				hd.Photo = photo
 			data.HotelDetails = hd
+			sad = SearchAvailabilityDetails.new
+				css_sad = doc.at_css('SearchAvailabilityDetails')
+				sad.Check_in_date = css_sad.at_css('Check_in_date').content
+				sad.Check_in_day_of_week = css_sad.at_css('Check_in_day_of_week').content
+				sad.Check_out_date = css_sad.at_css('Check_out_date').content
+				sad.Check_out_day_of_week = css_sad.at_css('Check_out_day_of_week').content
+				sad.Days = css_sad.at_css('Days').content
+				sad.RoomID = css_sad.at_css('RoomID').content
+				oc = Occupancy.new
+					css_oc = css_sad.at_css('Occupancy')
+					oc.Rooms = css_oc.at_css('Rooms').content
+					oc.Adults = css_oc.at_css('Adults').content
+					oc.Children = css_oc.at_css('Children').content
+				sad.Occupancy = oc
+				rn = RoomName.new
+					###TODO###
+				sad.RoomName = rn			
+			data
 		end
 
 		private
