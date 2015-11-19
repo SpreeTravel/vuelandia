@@ -102,8 +102,8 @@ class AgencyBalance
 end
 
 class AdditionalInformation
-	attr_accessor :status, :CommentsAllow, :Rooms, :CancellationPeriod, :Suplements, :Discounts,
-				  :Offers, :EssentialInformation, :fechaInicioCancelacion, :horaInicioCancelacion,
+	attr_accessor :status, :CommentsAllow, :onRequest, :Rooms, :CancellationPeriod, :Supplements, 
+				  :Discounts, :Offers, :EssentialInformation, :fechaInicioCancelacion, :horaInicioCancelacion,
 				  :fechaLimiteSinGastos, :horaLimiteSinGastos, :PaymentTypes 
 end
 
@@ -115,7 +115,7 @@ class CancellationPeriod
 	attr_accessor :From, :To, :Hour, :Amount, :PriceAgency
 end
 
-class SuplementOrDiscount
+class SupplementOrDiscount
 	attr_accessor :From, :To, :Obligatory, :Type, :Description, :Paxes_number, :Price, :PriceAgency
 end
 
@@ -128,7 +128,7 @@ class Information
 end
 
 class PaymentType
-	attr_accessor :Code, :Name
+	attr_accessor :code, :Name
 end
 
 class Rate
