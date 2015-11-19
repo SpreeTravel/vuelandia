@@ -120,7 +120,20 @@ module Vuelandia
 			data.AdditionalInformation = parse_additional_information_attribute(doc.at_css('AdditionalInformation'))
 			data.PVP = doc.at_css('PVP').content
 			data.PriceAgency = doc.at_css('PriceAgency').content
-			###TODO Rates###
+			css_rates = doc.at_css('Rates')
+			unless css_rate.nil?
+				data.Rates = []
+				css_rates.css('Rate').each do |r|
+					rate = Rate.new
+						rate.DATOS = css_rate.at_css('DATOS').content
+						rate.IDHotel = css_rate.at_css('IDHotel').content
+						rate.Price = css_rate.at_css('Price').content
+						rate.PriceAgency = css_rate.at_css('PriceAgency').content
+						rate.RefundableCode = css_rate.at_css('RefundableCode').content
+						rate.AdditionalInformation = parse_additional_information_attribute(css_rate.at_css('AdditionalInformation'))
+					data.Rates << rate
+				end
+			end
 			data
 		end
 
