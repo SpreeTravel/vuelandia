@@ -80,6 +80,10 @@ class Location
 	attr_accessor :Country, :Destination, :Zone
 end
 
+class CountryDestinationZone
+	attr_accessor :ID, :Name
+end
+
 class SearchAvailabilityDetails
 	attr_accessor :Check_in_date, :Check_in_day_of_week, :Check_out_date, :Check_out_day_of_week,
 				  :Days, :RoomID, :Occupancy, :RoomName, :BoardID, :BoardName  
@@ -98,8 +102,8 @@ class AgencyBalance
 end
 
 class AdditionalInformation
-	attr_accessor :status, :CommentsAllow, :Rooms, :CancellationPeriod, :Suplements, :Discounts,
-				  :Offers, :EssentialInformation, :fechaInicioCancelacion, :horaInicioCancelacion,
+	attr_accessor :status, :CommentsAllow, :onRequest, :Rooms, :CancellationPeriod, :Supplements, 
+				  :Discounts, :Offers, :EssentialInformation, :fechaInicioCancelacion, :horaInicioCancelacion,
 				  :fechaLimiteSinGastos, :horaLimiteSinGastos, :PaymentTypes 
 end
 
@@ -111,7 +115,7 @@ class CancellationPeriod
 	attr_accessor :From, :To, :Hour, :Amount, :PriceAgency
 end
 
-class SuplementOrDiscount
+class SupplementOrDiscount
 	attr_accessor :From, :To, :Obligatory, :Type, :Description, :Paxes_number, :Price, :PriceAgency
 end
 
@@ -124,11 +128,31 @@ class Information
 end
 
 class PaymentType
-	attr_accessor :Code, :Name
+	attr_accessor :code, :Name
 end
 
 class Rate
 	attr_accessor :DATOS, :IDHotel, :Price, :PriceAgency, :RefundableCode, :AdditionalInformation
+end
+###########################################################################################
+
+##############TO PERFORM AND PARSE A BOOKING CONFIRMATION##################################
+class Client
+	attr_accessor :name, :surnames, :documentNumber, :country, :region, :EMail, :PostCode, :Phone
+end
+
+class Company
+	attr_accessor :nameCompany, :cifCompany, :addressCompany, :postalCodeCompany,
+				  :ProvinceCompany, :regionCompany
+end
+
+class BookingConfirmationParsed
+	attr_accessor :ReservationStatus, :PaymentStatus, :ConfirmationStatus, :BookingID,
+				  :SecurityCode, :ERROR, :Errors
+end 
+
+class Error
+	attr_accessor :type, :message
 end
 ###########################################################################################
 
