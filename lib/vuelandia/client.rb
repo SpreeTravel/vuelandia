@@ -110,7 +110,7 @@ module Vuelandia
       connection.perform_request
     end
 
-    def perform_booking_confirmation(obj:, datos:, client:, language: "ENG")
+    def perform_booking_confirmation(obj:, datos:, client:, language: "ENG", **args)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.BookingConfirmationRQ(:version => "2.0", :language => language){
           xml.Request{
@@ -148,6 +148,20 @@ module Vuelandia
             unless args[:Reference].nil?
               xml.Reference_ args[:Reference]
             end            
+          }
+        }
+      end
+      xml = builder.to_xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
+
+    def perform_hotel_details_availability(hotelID:, language: "ENG", **args)
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.HotelDetailsAvailabilityRQ(:version => "2.0", :language => language){
+          xml.Request{
+            xml.HotelID_ hotelID
+            (xml.Session_id_ sessionID) unless args[:sessionID].nil?
           }
         }
       end
