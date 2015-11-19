@@ -117,89 +117,7 @@ module Vuelandia
 				ab.AmountAvailable = css_ab.at_css('AmountAvailablee').content			
 			end
 			data.AgencyBalance = ab
-			ai = AdditionalInformation.new
-				css_ai = doc.at_css('AdditionalInformation')
-				ai.status = css_ai.at_css('status').content
-				ai.CommentsAllow = css_ai.at_css('status').content
-				unless css_ai.at_css('onRequest').nil? #in the sample but not in the specification
-					ai.onRequest = css_ai.at_css('onRequest').content
-				end
-				ai.Rooms = []
-				css_ai.at_css('Rooms').css('Room').each do |r|
-					ra = RoomAdditional.new
-					ra.RoomID = r.at_css('RoomID').content				
-					ra.From = r.at_css('From').content				
-					ra.To = r.at_css('To').content				
-					ra.numberOfRooms = r.at_css('numberOfRooms').content				
-					ra.Adults = r.at_css('Adults').content				
-					ra.numberOfRooms = r.at_css('numberOfRooms').content				
-					ra.Children = r.at_css('Children').content				
-					ra.BoardID = r.at_css('BoardID').content				
-					ra.Price = r.at_css('Price').content				
-					ra.PriceAgency = r.at_css('PriceAgency').content				
-					ai.Rooms << ra
-				end
-				cp = CancellationPeriod.new
-					css_cp = css_ai.at_css('Cancellation').at_css('Period')
-					cp.From = css_cp.at_css('From').content
-					cp.To = css_cp.at_css('To').content
-					cp.Hour = css_cp.at_css('Hour').content
-					cp.Amount = css_cp.at_css('Amount').content
-					cp.PriceAgency = css_cp.at_css('PriceAgency').content
-				ai.CancellationPeriod = cp
-				ai.Supplements = []
-					css_ai.at_css('Supplements').css('Supplement').each do |s|
-						sup = SupplementOrDiscount.new
-						sup.From = s.at_css('From').content
-						sup.To = s.at_css('To').content
-						sup.Obligatory = s.at_css('Obligatory').content
-						sup.Type = s.at_css('Type').content
-						sup.Description = s.at_css('Description').content
-						sup.Paxes_number = s.at_css('Paxes_number').content
-						sup.Price = s.at_css('Price').content
-						sup.PriceAgency = s.at_css('PriceAgency').content
-						ai.Supplements << sup
-					end
-				ai.Discounts = []
-					css_ai.at_css('Discounts').css('Discount').each do |d|
-						disc = SupplementOrDiscount.new
-						disc.From = d.at_css('From').content
-						disc.To = d.at_css('To').content
-						disc.Obligatory = d.at_css('Obligatory').content
-						disc.Type = d.at_css('Type').content
-						disc.Description = d.at_css('Description').content
-						disc.Paxes_number = d.at_css('Paxes_number').content
-						disc.Price = d.at_css('Price').content
-						disc.PriceAgency = d.at_css('PriceAgency').content
-						ai.Discounts << disc
-					end
-				ai.Offers = []
-					css_ai.at_css('Offers').css('Offer').each do |o|
-						offer = Offer.new
-						offer.Name = o.at_css('Name').content
-						offer.Description = o.at_css('Description').content
-						ai.Offers << offer
-					end
-				ai.EssentialInformation = []
-					css_ai.at_css('EssentialInformation').css('Information').each do |i|
-						info = Information.new
-						info.From = i.at_css('From').content
-						info.To = i.at_css('To').content
-						info.Description = i.at_css('Description').content
-						ai.EssentialInformation << info
-					end
-				ai.fechaInicioCancelacion = css_ai.at_css('fechaInicioCancelacion').content
-				ai.horaInicioCancelacion = css_ai.at_css('horaInicioCancelacion').content
-				ai.fechaLimiteSinGastos = css_ai.at_css('fechaLimiteSinGastos').content
-				ai.horaLimiteSinGastos = css_ai.at_css('horaLimiteSinGastos').content
-				ai.PaymentTypes = []
-				css_ai.at_css('PaymentTypes').css('Type').each do |t|
-						type = PaymentType.new
-						type.code = t['code']
-						type.Name = t.content
-						ai.PaymentTypes << type
-					end
-			data.AdditionalInformation = ai
+			data.AdditionalInformation = parse_additional_information_attribute(doc.at_css('AdditionalInformation'))
 			data.PVP = doc.at_css('PVP').content
 			data.PriceAgency = doc.at_css('PriceAgency').content
 			###TODO Rates###
@@ -347,6 +265,94 @@ module Vuelandia
 				end
 			end
 			data
-		end	
+		end
+
+		#this method parses the AdditionalInformation of AdditionalInformationParsed
+		#is a separate method because Rates attribute also needs it and we like to follow
+		#the DRY principle
+		def parse_additional_information_attribute(css_ai)	
+			ai = AdditionalInformation.new
+				ai.status = css_ai.at_css('status').content
+				ai.CommentsAllow = css_ai.at_css('status').content
+				unless css_ai.at_css('onRequest').nil? #in the sample but not in the specification
+					ai.onRequest = css_ai.at_css('onRequest').content
+				end
+				ai.Rooms = []
+				css_ai.at_css('Rooms').css('Room').each do |r|
+					ra = RoomAdditional.new
+					ra.RoomID = r.at_css('RoomID').content				
+					ra.From = r.at_css('From').content				
+					ra.To = r.at_css('To').content				
+					ra.numberOfRooms = r.at_css('numberOfRooms').content				
+					ra.Adults = r.at_css('Adults').content				
+					ra.numberOfRooms = r.at_css('numberOfRooms').content				
+					ra.Children = r.at_css('Children').content				
+					ra.BoardID = r.at_css('BoardID').content				
+					ra.Price = r.at_css('Price').content				
+					ra.PriceAgency = r.at_css('PriceAgency').content				
+					ai.Rooms << ra
+				end
+				cp = CancellationPeriod.new
+					css_cp = css_ai.at_css('Cancellation').at_css('Period')
+					cp.From = css_cp.at_css('From').content
+					cp.To = css_cp.at_css('To').content
+					cp.Hour = css_cp.at_css('Hour').content
+					cp.Amount = css_cp.at_css('Amount').content
+					cp.PriceAgency = css_cp.at_css('PriceAgency').content
+				ai.CancellationPeriod = cp
+				ai.Supplements = []
+					css_ai.at_css('Supplements').css('Supplement').each do |s|
+						sup = SupplementOrDiscount.new
+						sup.From = s.at_css('From').content
+						sup.To = s.at_css('To').content
+						sup.Obligatory = s.at_css('Obligatory').content
+						sup.Type = s.at_css('Type').content
+						sup.Description = s.at_css('Description').content
+						sup.Paxes_number = s.at_css('Paxes_number').content
+						sup.Price = s.at_css('Price').content
+						sup.PriceAgency = s.at_css('PriceAgency').content
+						ai.Supplements << sup
+					end
+				ai.Discounts = []
+					css_ai.at_css('Discounts').css('Discount').each do |d|
+						disc = SupplementOrDiscount.new
+						disc.From = d.at_css('From').content
+						disc.To = d.at_css('To').content
+						disc.Obligatory = d.at_css('Obligatory').content
+						disc.Type = d.at_css('Type').content
+						disc.Description = d.at_css('Description').content
+						disc.Paxes_number = d.at_css('Paxes_number').content
+						disc.Price = d.at_css('Price').content
+						disc.PriceAgency = d.at_css('PriceAgency').content
+						ai.Discounts << disc
+					end
+				ai.Offers = []
+					css_ai.at_css('Offers').css('Offer').each do |o|
+						offer = Offer.new
+						offer.Name = o.at_css('Name').content
+						offer.Description = o.at_css('Description').content
+						ai.Offers << offer
+					end
+				ai.EssentialInformation = []
+					css_ai.at_css('EssentialInformation').css('Information').each do |i|
+						info = Information.new
+						info.From = i.at_css('From').content
+						info.To = i.at_css('To').content
+						info.Description = i.at_css('Description').content
+						ai.EssentialInformation << info
+					end
+				ai.fechaInicioCancelacion = css_ai.at_css('fechaInicioCancelacion').content
+				ai.horaInicioCancelacion = css_ai.at_css('horaInicioCancelacion').content
+				ai.fechaLimiteSinGastos = css_ai.at_css('fechaLimiteSinGastos').content
+				ai.horaLimiteSinGastos = css_ai.at_css('horaLimiteSinGastos').content
+				ai.PaymentTypes = []
+				css_ai.at_css('PaymentTypes').css('Type').each do |t|
+						type = PaymentType.new
+						type.code = t['code']
+						type.Name = t.content
+						ai.PaymentTypes << type
+					end
+			ai
+		end
 	end
 end
