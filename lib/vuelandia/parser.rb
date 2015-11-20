@@ -164,8 +164,75 @@ module Vuelandia
 					sap.Occupancies << oc					
 				end
 			data.SearchAvailabilityParameters = sap
-			hotel = Hotel.new
-
+			hotel = DetailedHotel.new
+				css_hotel = doc.at_css('Hotel')
+				hd = DetailedHotelDetails.new
+					css_hd = css_hotel.at_css('HotelDetails')
+					hd.ID = css_hd.at_css('ID').content
+					hd.Name = css_hd.at_css('Name').content
+					hd.Category = IdName.new
+					hd.Category.ID = css_hd.at_css('Category').at_css('ID').content
+					hd.Category.Name = css_hd.at_css('Category').at_css('Name').content
+					hd.Address = css_hd.at_css('Address').content
+					hd.City = css_hd.at_css('City').content
+					loc = Location.new
+						loc.Country = IdName.new
+						loc.Destination = IdName.new
+						loc.Zone = IdName.new
+						css_loc = css_hd.at_css('Location')
+						loc.Country.ID = css_loc.at_css('Country').at_css('ID').content	
+						loc.Country.Name = css_loc.at_css('Country').at_css('Name').content	
+						loc.Destination.ID = css_loc.at_css('Destination').at_css('ID').content	
+						loc.Destination.Name = css_loc.at_css('Destination').at_css('Name').content	
+						loc.Zone.ID = css_loc.at_css('Zone').at_css('ID').content	
+						loc.Zone.Name = css_loc.at_css('Zone').at_css('Name').content	
+					hd.Location = loc
+					hd.Latitud = css_hd.at_css('Latitud').content
+					hd.Longitud = css_hd.at_css('Longitud').content
+					hd.Description = css_hd.at_css('Description').content
+					hd.Photo = Photo.new
+					hd.Photo.Width = css_hd.at_css('Photo').at_css('Width').content
+					hd.Photo.Height = css_hd.at_css('Photo').at_css('Height').content
+					hd.Photo.URL = css_hd.at_css('Photo').at_css('URL').content
+					hd.Notes = []
+						css_hd.at_css('Notes').css('Note').each do |n|
+							note = Note.new
+							note.Type = n['type']
+							note.Text = n.content
+							hd.Notes << note
+						end
+					hd.Photos = []
+						css_hd.at_css('Photos').css('Photo').each do |p|
+							photo = Photo.new
+							photo.Width = p.at_css('Width').content
+							photo.Height = p.at_css('Height').content
+							photo.URL = p.at_css('URL').content
+							hd.Photos << photo
+						end
+					hd.ServicesFacilities = []
+						css_hd.at_css('ServicesFacilities').css('Service').each do |s|
+							service = Service.new
+							service.Type = s.at_css('Type').content
+							service.Name = s.at_css('Name').content
+							service.Value = s.at_css('Value').content
+							service.AdditionalCharges = s.at_css('AdditionalCharges').content
+							hd.ServicesFacilities << service
+						end
+					hd.CharacteristicsFacilities = []
+						css_hd.at_css('CharacteristicsFacilities').css('Characteristic').each do |c|
+							characteristic = Characteristic.new
+							characteristic.ID = c.at_css('ID').content
+							characteristic.Type = c.at_css('Type').content
+							characteristic.TypeID = c.at_css('TypeID').content
+							characteristic.Name = c.at_css('Name').content
+							characteristic.Value = c.at_css('Value').content
+							characteristic.AdditionalCharges = c.at_css('AdditionalCharges').content
+							hd.CharacteristicsFacilities << characteristic
+						end
+				hotel.HotelDetails = hd
+				
+			data.Hotel = hotel
+			
 			data
 		end
 
