@@ -230,7 +230,39 @@ module Vuelandia
 							hd.CharacteristicsFacilities << characteristic
 						end
 				hotel.HotelDetails = hd
-				
+				hotel.obj = css_hotel.at_css('obj').content
+				hotel.Accommodations = []
+					css_hotel.at_css('Accomodations').css('Room').each do |r|
+						room = DetailedRoom.new
+							rt = RoomType.new
+								css_rt = r.at_css('RoomType')
+								rt.ID = css_rt.at_css('ID').content
+								rt.Name = css_rt.at_css('Name').content
+								rt.NumberRooms = css_rt.at_css('NumberRooms').content
+								rt.Amenities = []
+								unless r.at_css('RoomType').at_css('Amenities').nil?
+									r.at_css('RoomType').at_css('Amenities').css('Amenity').each do |a|
+										rt.Amenities << a.at_css('ID').content
+									end
+								end
+							room.RoomType = rt
+							room.Boards = []
+								r.css('Board').each do |b|
+									board = Board.new
+										board.Board_type = IdName.new
+										board.Board_type.ID = b.at_css('Board_type').at_css('ID').content
+										board.Board_type.Name = b.at_css('Board_type').at_css('Name').content
+										board.Currency = b.at_css('Currency').content
+										board.Price = b.at_css('Price').content
+										board.PriceAgency = b.at_css('PriceAgency').content
+										board.DirectPayment = b.at_css('DirectPayment').content
+										board.DATOS = b.at_css('DATOS').content
+										board.StrokePrice = b.at_css('StrokePrice').content
+										board.Offer = b.at_css('Offer').content
+									room.Boards << board
+								end
+						hotel.Accomodations << room
+					end
 			data.Hotel = hotel
 			
 			data

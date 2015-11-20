@@ -161,7 +161,7 @@ class SearchAvailabilityParameters
 end
 
 class DetailedHotel
-	attr_accessor :HotelDetails
+	attr_accessor :HotelDetails, :obj, :Accomodations
 end
 
 class DetailedHotelDetails 
@@ -180,6 +180,10 @@ end
 
 class Characteristic < Service 
 	attr_accessor :ID, :TypeID
+end
+
+class DetailedRoom
+	attr_accessor :RoomType, :Boards
 end
 ###########################################################################################
 
