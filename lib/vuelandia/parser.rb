@@ -209,9 +209,9 @@ module Vuelandia
 		private
 		def to_nokogiri(document, type)
 			if type == :file
-				File.open(additional_information) { |f| Nokogiri::XML(f) }
+				File.open(document) { |f| Nokogiri::XML(f) }
 			else
-				Nokogiri::XML(additional_information)
+				Nokogiri::XML(document)
 			end
 		end
 
