@@ -165,9 +165,12 @@ module Vuelandia
 				end
 			data.SearchAvailabilityParameters = sap
 			data.Hotel = parse_detailed_hotel(doc.at_css('Hotel'))
-
-			###TODO Add data.SessionHotels###
-		
+			data.SessionHotels = []
+				unless doc.at_css('SessionHotels').at_css('Hotels').nil?
+					doc.at_css('SessionHotels').at_css('Hotels').css('Hotel').each do |h|
+						data.SessionHotels << parse_detailed_hotel(h)
+					end
+				end
 			data
 		end
 
@@ -213,7 +216,6 @@ module Vuelandia
 		end
 
 		def parse_detailed_hotel(css)
-		{
 			hotel = DetailedHotel.new
 				hd = DetailedHotelDetails.new
 					css_hd = css.at_css('HotelDetails')
@@ -330,7 +332,7 @@ module Vuelandia
 						end
 				end
 			hotel
-		}
+		end
 
 		def parse_search_availability_multiple(doc)
 			data = []
