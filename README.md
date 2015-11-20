@@ -45,7 +45,7 @@ Manually, via command line:
 			- `:destination`
 			- `:check\_in\_date` (format: 'YYYY-MM-DD')
 			- `:check\_out\_date` (format: 'YYYY-MM-DD')
-			- `:occupancy`
+			- `:occupancies`
 		- Optional
 			- `:language`
 			- `:hotel_list`
@@ -53,10 +53,6 @@ Manually, via command line:
 			- `:country_code`
 			- `:hotel_information`
 			- `:filters`
-
-		- Info 
-			- `:occupancy` is an array of rooms where each room is a hash with the following structure
-				`{ adult_count: x, child_count: y, child_ages: [a1...ay] }`
 - `perform_additional_information`
 	- Parameters
 		- Required

@@ -12,7 +12,7 @@ module Vuelandia
       freeze
     end
 
-    def perform_search_availability(destination:, check_in_date:, check_out_date:, occupancy:, **args)
+    def perform_search_availability(destination:, check_in_date:, check_out_date:, occupancies:, **args)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         language = args[:language] ? args[:language] : "ENG" 
         xml.SearchAvailabilityRQ(:version => "2.0", :language => language){
@@ -22,14 +22,14 @@ module Vuelandia
             }
             xml.Check_in_date_ check_in_date
             xml.Check_out_date_ check_out_date
-            occupancy.each do |room|
+            occupancies.each do |occupancy|
               xml.Occupancy{
-                xml.Rooms_ 1
-                xml.Adults_ room[:adult_count]
-                xml.Children_ room[:child_count]
-                if room[:child_count] > 0
+                xml.Rooms_ occupancy.Rooms
+                xml.Adults_ occupancy.Adults
+                xml.Children_ occupancy.Children
+                if occupancy.Children > 0
                   xml.Ages{
-                    room[:child_ages].each do |age|
+                    occupancy.Ages.each do |age|
                       xml.Age_ age
                     end
                   }
