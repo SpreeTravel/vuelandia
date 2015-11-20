@@ -164,7 +164,7 @@ module Vuelandia
 					sap.Occupancies << oc					
 				end
 			data.SearchAvailabilityParameters = sap
-
+			hotel = Hotel.new
 
 			data
 		end

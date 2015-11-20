@@ -1,15 +1,17 @@
-#############################COMMON CLASSES###############################
-class IdName
+#############################COMMON MODULE###############################
+module IdName
 	attr_accessor :ID, :Name
 end
 ##########################################################################
 
 ##################TO RETURN THE DATA FOR ALL DESTINATIONS LIST############
-class Country < IdName
+class Country 
+	include IdName
 	attr_accessor :Destinations
 end
 
-class Destination < IdName
+class Destination 
+	include IdName
 	attr_accessor :Zones
 end
 ###########################################################################
@@ -38,7 +40,8 @@ class Hotel
 	attr_accessor :HotelDetails, :Rooms
 end
 
-class HotelDetails < IdName
+class HotelDetails 
+	include IdName
 	attr_accessor :NameOriginal
 end
 
@@ -50,7 +53,8 @@ class Room
 	attr_accessor :RoomType, :Boards
 end
 
-class RoomType < IdName
+class RoomType 
+	include IdName
 	attr_accessor :Amenities, :NumberRooms
 end
 
@@ -66,7 +70,8 @@ class AdditionalInformationParsed
 				  :PVP, :PriceAgency, :Rates	
 end
 
-class HotelDetails < IdName
+class HotelDetails 
+	include IdName
 	attr_accessor :Category, :Address, :City, :Location, :Photo
 end
 
@@ -148,11 +153,33 @@ end
 
 ##############TO PARSE HOTEL AVAILABILITY DETAILS##########################################
 class HotelAvailabilityDetailsParsed
-	attr_accessor :SessionID, :SearchAvailabilityParameters, :Hotel
+	attr_accessor :SessionID, :SearchAvailabilityParameters, :DetailedHotel
 end
 
 class SearchAvailabilityParameters
 	attr_accessor :Check_in_date, :Check_out_date, :Location, :Occupancies
+end
+
+class DetailedHotel
+	attr_accessor :DetailedHotelDetails
+end
+
+class DetailedHotelDetails 
+	include IdName
+	attr_accessor :Category, :Address, :City, :Location, :Latitud, :Longitud, :Description,
+				  :Photo, :Notes, :Photos, :ServicesFacilities, :CharacteristicsFacilities 
+end
+
+class Note
+	attr_accessor :Type, :Text
+end
+
+class Service
+	attr_accessor :Type, :Name, :Value, :AdditionalCharges 
+end
+
+class Characteristic < Service 
+	attr_accessor :ID, :TypeID
 end
 ###########################################################################################
 
