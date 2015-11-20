@@ -160,7 +160,7 @@ module Vuelandia
         xml.HotelDetailsAvailabilityRQ(:version => "2.0", :language => language){
           xml.Request{
             xml.HotelID_ hotelID
-            (xml.Session_id_ sessionID) unless args[:sessionID].nil?
+            (xml.Session_id_ args[:sessionID]) unless args[:sessionID].nil?
           }
         }
       end

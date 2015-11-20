@@ -21,7 +21,7 @@ module Vuelandia
 				css_hd = doc.at_css('HotelDetails')
 				hd.ID = css_hd.at_css('ID').content
 				hd.Name = css_hd.at_css('Name').content
-				cat = IdName.new
+				cat = IDName.new
 					css_cat = css_hd.at_css('Category')
 					cat.ID = css_cat.at_css('ID').content
 					cat.Name = css_cat.at_css('Name').content
@@ -30,19 +30,19 @@ module Vuelandia
 				hd.City = css_hd.at_css('City').content
 				loc = Location.new
 					css_loc = css_hd.at_css('Location')
-					loc_country = IdName.new
+					loc_country = IDName.new
 						css_loc_country = css_loc.at_css('Country')
 						loc_country.ID = css_loc_country.at_css('ID').content
 						loc_country.Name = css_loc_country.at_css('Name').content
 					loc.Country = loc_country
 						
-					loc_destination = IdName.new
+					loc_destination = IDName.new
 						css_loc_destination = css_loc.at_css('Destination')
 						loc_destination.ID = css_loc_destination.at_css('ID').content
 						loc_destination.Name = css_loc_destination.at_css('Name').content
 					loc.Destination = loc_destination
 			
-					loc_zone = IdName.new
+					loc_zone = IDName.new
 						css_loc_zone = css_loc.at_css('Zone')
 						loc_zone.ID = css_loc_zone.at_css('ID').content
 						loc_zone.Name = css_loc_zone.at_css('Name').content
@@ -116,7 +116,7 @@ module Vuelandia
 			data
 		end
 
-		def parse_booking_confirmation(booking_confirmation, type)
+		def parse_booking_confirmation(booking_confirmation, type: :string)
 			doc = to_nokogiri(booking_confirmation, type)
 			data = BookingConfirmationParsed.new
 			data.ReservationStatus = doc.at_css('ReservationStatus').content
@@ -137,7 +137,7 @@ module Vuelandia
 			data
 		end
 
-		def parse_hotel_availability_details(hotel_availability_details, type)
+		def parse_hotel_availability_details(hotel_availability_details, type: :string)
 			doc = to_nokogiri(hotel_availability_details, type)
 			data = HotelAvailabilityDetailsParsed.new
 			data.SessionID = doc.at_css('SessionID').content
@@ -145,7 +145,7 @@ module Vuelandia
 				css_sap = doc.at_css('SearchAvailabilityParameters')
 				sap.Check_in_date = css_sap.at_css('Check_in_date').content
 				sap.Check_out_date = css_sap.at_css('Check_out_date').content
-				loc = IdName.new
+				loc = IDName.new
 					loc.ID = css_sap.at_css('Location').at_css('DestinationID').content
 					loc.Name = css_sap.at_css('Location').at_css('DestinationID').content
 				sap.Location = loc
@@ -158,7 +158,7 @@ module Vuelandia
 						oc.Ages = []
 						unless o.at_css('Ages').nil?
 							o.at_css('Ages').css('Age').each do |a|
-								o.Ages << a.content
+								oc.Ages << a.content
 							end
 						end
 					sap.Occupancies << oc					
@@ -178,21 +178,21 @@ module Vuelandia
 			doc = to_nokogiri(all_destinations_list, type)
 			data = []
 			doc.css('Country').each do |c|
-				country = IdName.new
+				country = Country.new
 				country.ID = c.at_css('ID').content
 				country.Name = c.at_css('Name').content
 				country.Destinations = []				
 				dest = c.at_css('Destinations')
 				unless dest.nil? || dest.children.empty?
 					dest.css('Destination').each do |d|
-						destination = IdName.new
+						destination = Destination.new
 						destination.ID = d.at_css('ID').content
 						destination.Name = d.at_css('Name').content
 						destination.Zones = []
 						zon = d.at_css('Zones')
 						unless zon.nil? || zon.children.empty? 
 							zon.css('Zone').each do |z|
-								zone = IdName.new
+								zone = IDName.new
 								zone.ID = z.at_css('ID').content
 								zone.Name = z.at_css('Name').content
 								destination.Zones << zone
@@ -221,15 +221,15 @@ module Vuelandia
 					css_hd = css.at_css('HotelDetails')
 					hd.ID = css_hd.at_css('ID').content
 					hd.Name = css_hd.at_css('Name').content
-					hd.Category = IdName.new
+					hd.Category = IDName.new
 					hd.Category.ID = css_hd.at_css('Category').at_css('ID').content
 					hd.Category.Name = css_hd.at_css('Category').at_css('Name').content
 					hd.Address = css_hd.at_css('Address').content
 					hd.City = css_hd.at_css('City').content
 					loc = Location.new
-						loc.Country = IdName.new
-						loc.Destination = IdName.new
-						loc.Zone = IdName.new
+						loc.Country = IDName.new
+						loc.Destination = IDName.new
+						loc.Zone = IDName.new
 						css_loc = css_hd.at_css('Location')
 						loc.Country.ID = css_loc.at_css('Country').at_css('ID').content	
 						loc.Country.Name = css_loc.at_css('Country').at_css('Name').content	
@@ -316,7 +316,7 @@ module Vuelandia
 								room.Boards = []
 									r.css('Board').each do |b|
 										board = Board.new
-											board.Board_type = IdName.new
+											board.Board_type = IDName.new
 											board.Board_type.ID = b.at_css('Board_type').at_css('ID').content
 											board.Board_type.Name = b.at_css('Board_type').at_css('Name').content
 											board.Currency = b.at_css('Currency').content
@@ -381,7 +381,7 @@ module Vuelandia
 					#####Setting optional parameters that only appear when information was requested######
 					cat = h.at_css('Category')
 					unless cat.nil?
-						category = IdName.new
+						category = IDName.new
 						category.ID = cat.at_css('ID').content
 						category.Name = cat.at_css('Name').content
 						hotel.Category = category
@@ -425,7 +425,7 @@ module Vuelandia
 							am = am.css('Amenity')
 							unless am.nil?
 								am.each do |a|
-									amenity = IdName.new
+									amenity = IDName.new
 									amenity.ID = a.at_css('ID').content
 									unless a.at_css('Name').nil?
 										amenity.Name = a.at_css('Name').content
