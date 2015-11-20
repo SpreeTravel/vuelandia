@@ -164,10 +164,59 @@ module Vuelandia
 					sap.Occupancies << oc					
 				end
 			data.SearchAvailabilityParameters = sap
+			data.Hotel = parse_detailed_hotel(doc.at_css('Hotel'))
+
+			###TODO Add data.SessionHotels###
+		
+			data
+		end
+
+		def parse_all_destinations_list(all_destinations_list, type: :string)
+			doc = to_nokogiri(all_destinations_list, type)
+			data = []
+			doc.css('Country').each do |c|
+				country = IdName.new
+				country.ID = c.at_css('ID').content
+				country.Name = c.at_css('Name').content
+				country.Destinations = []				
+				dest = c.at_css('Destinations')
+				unless dest.nil? || dest.children.empty?
+					dest.css('Destination').each do |d|
+						destination = IdName.new
+						destination.ID = d.at_css('ID').content
+						destination.Name = d.at_css('Name').content
+						destination.Zones = []
+						zon = d.at_css('Zones')
+						unless zon.nil? || zon.children.empty? 
+							zon.css('Zone').each do |z|
+								zone = IdName.new
+								zone.ID = z.at_css('ID').content
+								zone.Name = z.at_css('Name').content
+								destination.Zones << zone
+							end
+						end
+						country.Destinations << destination
+					end
+				end
+				data << country
+			end
+			data
+		end
+
+		private
+		def to_nokogiri(document, type)
+			if type == :file
+				File.open(additional_information) { |f| Nokogiri::XML(f) }
+			else
+				Nokogiri::XML(additional_information)
+			end
+		end
+
+		def parse_detailed_hotel(css)
+		{
 			hotel = DetailedHotel.new
-				css_hotel = doc.at_css('Hotel')
 				hd = DetailedHotelDetails.new
-					css_hd = css_hotel.at_css('HotelDetails')
+					css_hd = css.at_css('HotelDetails')
 					hd.ID = css_hd.at_css('ID').content
 					hd.Name = css_hd.at_css('Name').content
 					hd.Category = IdName.new
@@ -230,9 +279,9 @@ module Vuelandia
 							hd.CharacteristicsFacilities << characteristic
 						end
 				hotel.HotelDetails = hd
-				hotel.obj = css_hotel.at_css('obj').content
+				hotel.obj = css.at_css('obj').content
 				hotel.Accommodations = []
-					css_hotel.at_css('Accomodations').css('Room').each do |r|
+					css.at_css('Accomodations').css('Room').each do |r|
 						room = DetailedRoom.new
 							rt = RoomType.new
 								css_rt = r.at_css('RoomType')
@@ -263,51 +312,8 @@ module Vuelandia
 								end
 						hotel.Accomodations << room
 					end
-			data.Hotel = hotel
-			
-			data
-		end
-
-		def parse_all_destinations_list(all_destinations_list, type: :string)
-			doc = to_nokogiri(all_destinations_list, type)
-			data = []
-			doc.css('Country').each do |c|
-				country = IdName.new
-				country.ID = c.at_css('ID').content
-				country.Name = c.at_css('Name').content
-				country.Destinations = []				
-				dest = c.at_css('Destinations')
-				unless dest.nil? || dest.children.empty?
-					dest.css('Destination').each do |d|
-						destination = IdName.new
-						destination.ID = d.at_css('ID').content
-						destination.Name = d.at_css('Name').content
-						destination.Zones = []
-						zon = d.at_css('Zones')
-						unless zon.nil? || zon.children.empty? 
-							zon.css('Zone').each do |z|
-								zone = IdName.new
-								zone.ID = z.at_css('ID').content
-								zone.Name = z.at_css('Name').content
-								destination.Zones << zone
-							end
-						end
-						country.Destinations << destination
-					end
-				end
-				data << country
-			end
-			data
-		end
-
-		private
-		def to_nokogiri(document, type)
-			if type == :file
-				File.open(additional_information) { |f| Nokogiri::XML(f) }
-			else
-				Nokogiri::XML(additional_information)
-			end
-		end
+			hotel
+		}
 
 		def parse_search_availability_multiple(doc)
 			data = []

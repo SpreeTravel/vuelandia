@@ -153,7 +153,7 @@ end
 
 ##############TO PARSE HOTEL AVAILABILITY DETAILS##########################################
 class HotelAvailabilityDetailsParsed
-	attr_accessor :SessionID, :SearchAvailabilityParameters, :Hotel
+	attr_accessor :SessionID, :SearchAvailabilityParameters, :Hotel, :SessionHotels
 end
 
 class SearchAvailabilityParameters
