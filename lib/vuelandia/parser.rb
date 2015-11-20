@@ -238,80 +238,97 @@ module Vuelandia
 					hd.Location = loc
 					hd.Latitud = css_hd.at_css('Latitud').content
 					hd.Longitud = css_hd.at_css('Longitud').content
-					hd.Description = css_hd.at_css('Description').content
+					unless css_hd.at_css('Description').nil?
+						hd.Description = css_hd.at_css('Description').content
+					end
 					hd.Photo = Photo.new
 					hd.Photo.Width = css_hd.at_css('Photo').at_css('Width').content
 					hd.Photo.Height = css_hd.at_css('Photo').at_css('Height').content
 					hd.Photo.URL = css_hd.at_css('Photo').at_css('URL').content
-					hd.Notes = []
-						css_hd.at_css('Notes').css('Note').each do |n|
-							note = Note.new
-							note.Type = n['type']
-							note.Text = n.content
-							hd.Notes << note
-						end
-					hd.Photos = []
-						css_hd.at_css('Photos').css('Photo').each do |p|
-							photo = Photo.new
-							photo.Width = p.at_css('Width').content
-							photo.Height = p.at_css('Height').content
-							photo.URL = p.at_css('URL').content
-							hd.Photos << photo
-						end
-					hd.ServicesFacilities = []
-						css_hd.at_css('ServicesFacilities').css('Service').each do |s|
-							service = Service.new
-							service.Type = s.at_css('Type').content
-							service.Name = s.at_css('Name').content
-							service.Value = s.at_css('Value').content
-							service.AdditionalCharges = s.at_css('AdditionalCharges').content
-							hd.ServicesFacilities << service
-						end
-					hd.CharacteristicsFacilities = []
-						css_hd.at_css('CharacteristicsFacilities').css('Characteristic').each do |c|
-							characteristic = Characteristic.new
-							characteristic.ID = c.at_css('ID').content
-							characteristic.Type = c.at_css('Type').content
-							characteristic.TypeID = c.at_css('TypeID').content
-							characteristic.Name = c.at_css('Name').content
-							characteristic.Value = c.at_css('Value').content
-							characteristic.AdditionalCharges = c.at_css('AdditionalCharges').content
-							hd.CharacteristicsFacilities << characteristic
-						end
-				hotel.HotelDetails = hd
-				hotel.obj = css.at_css('obj').content
-				hotel.Accommodations = []
-					css.at_css('Accomodations').css('Room').each do |r|
-						room = DetailedRoom.new
-							rt = RoomType.new
-								css_rt = r.at_css('RoomType')
-								rt.ID = css_rt.at_css('ID').content
-								rt.Name = css_rt.at_css('Name').content
-								rt.NumberRooms = css_rt.at_css('NumberRooms').content
-								rt.Amenities = []
-								unless r.at_css('RoomType').at_css('Amenities').nil?
-									r.at_css('RoomType').at_css('Amenities').css('Amenity').each do |a|
-										rt.Amenities << a.at_css('ID').content
-									end
-								end
-							room.RoomType = rt
-							room.Boards = []
-								r.css('Board').each do |b|
-									board = Board.new
-										board.Board_type = IdName.new
-										board.Board_type.ID = b.at_css('Board_type').at_css('ID').content
-										board.Board_type.Name = b.at_css('Board_type').at_css('Name').content
-										board.Currency = b.at_css('Currency').content
-										board.Price = b.at_css('Price').content
-										board.PriceAgency = b.at_css('PriceAgency').content
-										board.DirectPayment = b.at_css('DirectPayment').content
-										board.DATOS = b.at_css('DATOS').content
-										board.StrokePrice = b.at_css('StrokePrice').content
-										board.Offer = b.at_css('Offer').content
-									room.Boards << board
-								end
-						hotel.Accomodations << room
+					unless css_hd.at_css('Notes').nil? 
+						hd.Notes = []
+							css_hd.at_css('Notes').css('Note').each do |n|
+								note = Note.new
+								note.Type = n['type']
+								note.Text = n.content
+								hd.Notes << note
+							end
 					end
+					unless css_hd.at_css('ImportantNote').nil?
+						hd.ImportantNote = css_hd.at_css('ImportantNote').content
+					end 
+					unless css_hd.at_css('Photos').nil?
+						hd.Photos = []
+							css_hd.at_css('Photos').css('Photo').each do |p|
+								photo = Photo.new
+								photo.Width = p.at_css('Width').content
+								photo.Height = p.at_css('Height').content
+								photo.URL = p.at_css('URL').content
+								hd.Photos << photo
+							end
+					end
+					unless css_hd.at_css('ServicesFacilities').nil?
+						hd.ServicesFacilities = []
+							css_hd.at_css('ServicesFacilities').css('Service').each do |s|
+								service = Service.new
+								service.Type = s.at_css('Type').content
+								service.Name = s.at_css('Name').content
+								service.Value = s.at_css('Value').content
+								service.AdditionalCharges = s.at_css('AdditionalCharges').content
+								hd.ServicesFacilities << service
+							end
+					end
+					unless css_hd.at_css('CharacteristicsFacilities').nil?
+						hd.CharacteristicsFacilities = []
+							css_hd.at_css('CharacteristicsFacilities').css('Characteristic').each do |c|
+								characteristic = Characteristic.new
+								characteristic.ID = c.at_css('ID').content
+								characteristic.Type = c.at_css('Type').content
+								characteristic.TypeID = c.at_css('TypeID').content
+								characteristic.Name = c.at_css('Name').content
+								characteristic.Value = c.at_css('Value').content
+								characteristic.AdditionalCharges = c.at_css('AdditionalCharges').content
+								hd.CharacteristicsFacilities << characteristic
+							end
+					end
+				hotel.HotelDetails = hd
+				unless css.at_css('obj').nil?
+					hotel.obj = css.at_css('obj').content
+				end
+				unless css.at_css('Accomodations').nil?
+					hotel.Accommodations = []
+						css.at_css('Accomodations').css('Room').each do |r|
+							room = DetailedRoom.new
+								rt = RoomType.new
+									css_rt = r.at_css('RoomType')
+									rt.ID = css_rt.at_css('ID').content
+									rt.Name = css_rt.at_css('Name').content
+									rt.NumberRooms = css_rt.at_css('NumberRooms').content
+									rt.Amenities = []
+									unless r.at_css('RoomType').at_css('Amenities').nil?
+										r.at_css('RoomType').at_css('Amenities').css('Amenity').each do |a|
+											rt.Amenities << a.at_css('ID').content
+										end
+									end
+								room.RoomType = rt
+								room.Boards = []
+									r.css('Board').each do |b|
+										board = Board.new
+											board.Board_type = IdName.new
+											board.Board_type.ID = b.at_css('Board_type').at_css('ID').content
+											board.Board_type.Name = b.at_css('Board_type').at_css('Name').content
+											board.Currency = b.at_css('Currency').content
+											board.Price = b.at_css('Price').content
+											board.PriceAgency = b.at_css('PriceAgency').content
+											board.DirectPayment = b.at_css('DirectPayment').content
+											board.DATOS = b.at_css('DATOS').content
+											board.StrokePrice = b.at_css('StrokePrice').content
+											board.Offer = b.at_css('Offer').content
+										room.Boards << board
+									end
+							hotel.Accomodations << room
+						end
+				end
 			hotel
 		}
 

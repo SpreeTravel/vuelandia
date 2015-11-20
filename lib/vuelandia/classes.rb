@@ -167,7 +167,8 @@ end
 class DetailedHotelDetails 
 	include IdName
 	attr_accessor :Category, :Address, :City, :Location, :Latitud, :Longitud, :Description,
-				  :Photo, :Notes, :Photos, :ServicesFacilities, :CharacteristicsFacilities 
+				  :Photo, :Notes, :Photos, :ServicesFacilities, :CharacteristicsFacilities, 
+				  :ImportantNote 
 end
 
 class Note
