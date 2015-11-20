@@ -1,14 +1,16 @@
-##################TO RETURN THE DATA FOR ALL DESTINATIONS LIST############
-class Country
-	attr_accessor :ID, :Name, :Destinations
-end
-
-class Destination
-	attr_accessor :ID, :Name, :Zones
-end
-
-class Zone
+#############################COMMON CLASSES###############################
+class IdName
 	attr_accessor :ID, :Name
+end
+##########################################################################
+
+##################TO RETURN THE DATA FOR ALL DESTINATIONS LIST############
+class Country < IdName
+	attr_accessor :Destinations
+end
+
+class Destination < IdName
+	attr_accessor :Zones
 end
 ###########################################################################
 
@@ -36,12 +38,8 @@ class Hotel
 	attr_accessor :HotelDetails, :Rooms
 end
 
-class HotelDetails
-	attr_accessor :ID, :Name, :NameOriginal
-end
-
-class Category
-	attr_accessor :ID, :Name
+class HotelDetails < IdName
+	attr_accessor :NameOriginal
 end
 
 class Photo
@@ -52,12 +50,8 @@ class Room
 	attr_accessor :RoomType, :Boards
 end
 
-class RoomType
-	attr_accessor :ID, :Name, :Amenities, :NumberRooms
-end
-
-class Amenity
-	attr_accessor :ID, :Name
+class RoomType < IdName
+	attr_accessor :Amenities, :NumberRooms
 end
 
 class Board
@@ -72,16 +66,12 @@ class AdditionalInformationParsed
 				  :PVP, :PriceAgency, :Rates	
 end
 
-class HotelDetails
-	attr_accessor :ID, :Name, :Category, :Address, :City, :Location, :Photo
+class HotelDetails < IdName
+	attr_accessor :Category, :Address, :City, :Location, :Photo
 end
 
 class Location
 	attr_accessor :Country, :Destination, :Zone
-end
-
-class CountryDestinationZone
-	attr_accessor :ID, :Name
 end
 
 class SearchAvailabilityDetails
@@ -158,7 +148,11 @@ end
 
 ##############TO PARSE HOTEL AVAILABILITY DETAILS##########################################
 class HotelAvailabilityDetailsParsed
-	attr_accessor :SessionID, :SearchAvailabilityParameters
+	attr_accessor :SessionID, :SearchAvailabilityParameters, :Hotel
+end
+
+class SearchAvailabilityParameters
+	attr_accessor :Check_in_date, :Check_out_date, :Location, :Occupancies
 end
 ###########################################################################################
 

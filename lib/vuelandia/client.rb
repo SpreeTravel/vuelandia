@@ -5,7 +5,6 @@ require 'nokogiri'
 module Vuelandia
   class Client
     attr_accessor :configuration, :connection
-    private :configuration=, :connection, :connection=
 
     def initialize(**config)
       self.configuration = Configuration.new(**config)

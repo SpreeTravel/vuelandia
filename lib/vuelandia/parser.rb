@@ -21,7 +21,7 @@ module Vuelandia
 				css_hd = doc.at_css('HotelDetails')
 				hd.ID = css_hd.at_css('ID').content
 				hd.Name = css_hd.at_css('Name').content
-				cat = Category.new
+				cat = IdName.new
 					css_cat = css_hd.at_css('Category')
 					cat.ID = css_cat.at_css('ID').content
 					cat.Name = css_cat.at_css('Name').content
@@ -30,19 +30,19 @@ module Vuelandia
 				hd.City = css_hd.at_css('City').content
 				loc = Location.new
 					css_loc = css_hd.at_css('Location')
-					loc_country = CountryDestinationZone.new
+					loc_country = IdName.new
 						css_loc_country = css_loc.at_css('Country')
 						loc_country.ID = css_loc_country.at_css('ID').content
 						loc_country.Name = css_loc_country.at_css('Name').content
 					loc.Country = loc_country
 						
-					loc_destination = CountryDestinationZone.new
+					loc_destination = IdName.new
 						css_loc_destination = css_loc.at_css('Destination')
 						loc_destination.ID = css_loc_destination.at_css('ID').content
 						loc_destination.Name = css_loc_destination.at_css('Name').content
 					loc.Destination = loc_destination
 			
-					loc_zone = CountryDestinationZone.new
+					loc_zone = IdName.new
 						css_loc_zone = css_loc.at_css('Zone')
 						loc_zone.ID = css_loc_zone.at_css('ID').content
 						loc_zone.Name = css_loc_zone.at_css('Name').content
@@ -139,27 +139,55 @@ module Vuelandia
 
 		def parse_hotel_availability_details(hotel_availability_details, type)
 			doc = to_nokogiri(hotel_availability_details, type)
+			data = HotelAvailabilityDetailsParsed.new
+			data.SessionID = doc.at_css('SessionID').content
+			sap = SearchAvailabilityParameters.new
+				css_sap = doc.at_css('SearchAvailabilityParameters')
+				sap.Check_in_date = css_sap.at_css('Check_in_date').content
+				sap.Check_out_date = css_sap.at_css('Check_out_date').content
+				loc = IdName.new
+					loc.ID = css_sap.at_css('Location').at_css('DestinationID').content
+					loc.Name = css_sap.at_css('Location').at_css('DestinationID').content
+				sap.Location = loc
+				sap.Occupancies = []
+				css_sap.css('Occupancy').each do |o|
+					oc = Occupancy.new
+						oc.Rooms = o.at_css('Rooms').content
+						oc.Adults = o.at_css('Adults').content
+						oc.Children = o.at_css('Children').content
+						oc.Ages = []
+						unless o.at_css('Ages').nil?
+							o.at_css('Ages').css('Age').each do |a|
+								o.Ages << a.content
+							end
+						end
+					sap.Occupancies << oc					
+				end
+			data.SearchAvailabilityParameters = sap
+
+
+			data
 		end
 
 		def parse_all_destinations_list(all_destinations_list, type: :string)
 			doc = to_nokogiri(all_destinations_list, type)
 			data = []
 			doc.css('Country').each do |c|
-				country = Country.new
+				country = IdName.new
 				country.ID = c.at_css('ID').content
 				country.Name = c.at_css('Name').content
 				country.Destinations = []				
 				dest = c.at_css('Destinations')
 				unless dest.nil? || dest.children.empty?
 					dest.css('Destination').each do |d|
-						destination = Destination.new
+						destination = IdName.new
 						destination.ID = d.at_css('ID').content
 						destination.Name = d.at_css('Name').content
 						destination.Zones = []
 						zon = d.at_css('Zones')
 						unless zon.nil? || zon.children.empty? 
 							zon.css('Zone').each do |z|
-								zone = Zone.new
+								zone = IdName.new
 								zone.ID = z.at_css('ID').content
 								zone.Name = z.at_css('Name').content
 								destination.Zones << zone
@@ -229,7 +257,7 @@ module Vuelandia
 					#####Setting optional parameters that only appear when information was requested######
 					cat = h.at_css('Category')
 					unless cat.nil?
-						category = Category.new
+						category = IdName.new
 						category.ID = cat.at_css('ID').content
 						category.Name = cat.at_css('Name').content
 						hotel.Category = category
@@ -273,7 +301,7 @@ module Vuelandia
 							am = am.css('Amenity')
 							unless am.nil?
 								am.each do |a|
-									amenity = Amenity.new
+									amenity = IdName.new
 									amenity.ID = a.at_css('ID').content
 									unless a.at_css('Name').nil?
 										amenity.Name = a.at_css('Name').content
