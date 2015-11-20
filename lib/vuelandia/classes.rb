@@ -1,14 +1,18 @@
-##################TO RETURN THE DATA FOR ALL DESTINATIONS LIST############
-class Country
-	attr_accessor :ID, :Name, :Destinations
-end
-
-class Destination
-	attr_accessor :ID, :Name, :Zones
-end
-
-class Zone
+#############################COMMON MODULE###############################
+module IdName
 	attr_accessor :ID, :Name
+end
+##########################################################################
+
+##################TO RETURN THE DATA FOR ALL DESTINATIONS LIST############
+class Country 
+	include IdName
+	attr_accessor :Destinations
+end
+
+class Destination 
+	include IdName
+	attr_accessor :Zones
 end
 ###########################################################################
 
@@ -36,12 +40,9 @@ class Hotel
 	attr_accessor :HotelDetails, :Rooms
 end
 
-class HotelDetails
-	attr_accessor :ID, :Name, :NameOriginal
-end
-
-class Category
-	attr_accessor :ID, :Name
+class HotelDetails 
+	include IdName
+	attr_accessor :NameOriginal
 end
 
 class Photo
@@ -52,12 +53,9 @@ class Room
 	attr_accessor :RoomType, :Boards
 end
 
-class RoomType
-	attr_accessor :ID, :Name, :Amenities, :NumberRooms
-end
-
-class Amenity
-	attr_accessor :ID, :Name
+class RoomType 
+	include IdName
+	attr_accessor :Amenities, :NumberRooms
 end
 
 class Board
@@ -72,25 +70,22 @@ class AdditionalInformationParsed
 				  :PVP, :PriceAgency, :Rates	
 end
 
-class HotelDetails
-	attr_accessor :ID, :Name, :Category, :Address, :City, :Location, :Photo
+class HotelDetails 
+	include IdName
+	attr_accessor :Category, :Address, :City, :Location, :Photo
 end
 
 class Location
 	attr_accessor :Country, :Destination, :Zone
 end
 
-class CountryDestinationZone
-	attr_accessor :ID, :Name
-end
-
 class SearchAvailabilityDetails
 	attr_accessor :Check_in_date, :Check_in_day_of_week, :Check_out_date, :Check_out_day_of_week,
-				  :Days, :RoomID, :Occupancy, :RoomName, :BoardID, :BoardName  
+				  :Days, :RoomID, :Occupancies, :RoomNames, :BoardID, :BoardName  
 end
 
 class Occupancy
-	attr_accessor :Rooms, :Adults, :Children
+	attr_accessor :Rooms, :Adults, :Children, :Ages
 end
 
 class RoomName
@@ -153,6 +148,43 @@ end
 
 class Error
 	attr_accessor :type, :message
+end
+###########################################################################################
+
+##############TO PARSE HOTEL AVAILABILITY DETAILS##########################################
+class HotelAvailabilityDetailsParsed
+	attr_accessor :SessionID, :SearchAvailabilityParameters, :Hotel, :SessionHotels
+end
+
+class SearchAvailabilityParameters
+	attr_accessor :Check_in_date, :Check_out_date, :Location, :Occupancies
+end
+
+class DetailedHotel
+	attr_accessor :HotelDetails, :obj, :Accomodations
+end
+
+class DetailedHotelDetails 
+	include IdName
+	attr_accessor :Category, :Address, :City, :Location, :Latitud, :Longitud, :Description,
+				  :Photo, :Notes, :Photos, :ServicesFacilities, :CharacteristicsFacilities, 
+				  :ImportantNote 
+end
+
+class Note
+	attr_accessor :Type, :Text
+end
+
+class Service
+	attr_accessor :Type, :Name, :Value, :AdditionalCharges 
+end
+
+class Characteristic < Service 
+	attr_accessor :ID, :TypeID
+end
+
+class DetailedRoom
+	attr_accessor :RoomType, :Boards
 end
 ###########################################################################################
 

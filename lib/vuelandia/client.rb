@@ -5,14 +5,13 @@ require 'nokogiri'
 module Vuelandia
   class Client
     attr_accessor :configuration, :connection
-    private :configuration=, :connection, :connection=
 
     def initialize(**config)
       self.configuration = Configuration.new(**config)
       freeze
     end
 
-    def perform_search_availability(destination:, check_in_date:, check_out_date:, occupancy:, **args)
+    def perform_search_availability(destination:, check_in_date:, check_out_date:, occupancies:, **args)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         language = args[:language] ? args[:language] : "ENG" 
         xml.SearchAvailabilityRQ(:version => "2.0", :language => language){
@@ -22,14 +21,14 @@ module Vuelandia
             }
             xml.Check_in_date_ check_in_date
             xml.Check_out_date_ check_out_date
-            occupancy.each do |room|
+            occupancies.each do |occupancy|
               xml.Occupancy{
-                xml.Rooms_ 1
-                xml.Adults_ room[:adult_count]
-                xml.Children_ room[:child_count]
-                if room[:child_count] > 0
+                xml.Rooms_ occupancy.Rooms
+                xml.Adults_ occupancy.Adults
+                xml.Children_ occupancy.Children
+                if occupancy.Children > 0
                   xml.Ages{
-                    room[:child_ages].each do |age|
+                    occupancy.Ages.each do |age|
                       xml.Age_ age
                     end
                   }
@@ -110,7 +109,7 @@ module Vuelandia
       connection.perform_request
     end
 
-    def perform_booking_confirmation(obj:, datos:, client:, language: "ENG")
+    def perform_booking_confirmation(obj:, datos:, client:, language: "ENG", **args)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.BookingConfirmationRQ(:version => "2.0", :language => language){
           xml.Request{
@@ -148,6 +147,20 @@ module Vuelandia
             unless args[:Reference].nil?
               xml.Reference_ args[:Reference]
             end            
+          }
+        }
+      end
+      xml = builder.to_xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
+
+    def perform_hotel_details_availability(hotelID:, language: "ENG", **args)
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.HotelDetailsAvailabilityRQ(:version => "2.0", :language => language){
+          xml.Request{
+            xml.HotelID_ hotelID
+            (xml.Session_id_ sessionID) unless args[:sessionID].nil?
           }
         }
       end
