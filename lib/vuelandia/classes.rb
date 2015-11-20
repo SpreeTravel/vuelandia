@@ -86,11 +86,11 @@ end
 
 class SearchAvailabilityDetails
 	attr_accessor :Check_in_date, :Check_in_day_of_week, :Check_out_date, :Check_out_day_of_week,
-				  :Days, :RoomID, :Occupancy, :RoomName, :BoardID, :BoardName  
+				  :Days, :RoomID, :Occupancies, :RoomNames, :BoardID, :BoardName  
 end
 
 class Occupancy
-	attr_accessor :Rooms, :Adults, :Children
+	attr_accessor :Rooms, :Adults, :Children, :Ages
 end
 
 class RoomName
@@ -153,6 +153,12 @@ end
 
 class Error
 	attr_accessor :type, :message
+end
+###########################################################################################
+
+##############TO PARSE HOTEL AVAILABILITY DETAILS##########################################
+class HotelAvailabilityDetailsParsed
+	attr_accessor :SessionID, :SearchAvailabilityParameters
 end
 ###########################################################################################
 

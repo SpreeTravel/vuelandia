@@ -3,38 +3,6 @@ require_relative 'classes'
 
 module Vuelandia
 	class Parser
-		def parse_all_destinations_list(all_destinations_list, type: :string)
-			doc = to_nokogiri(all_destinations_list, type)
-			data = []
-			doc.css('Country').each do |c|
-				country = Country.new
-				country.ID = c.at_css('ID').content
-				country.Name = c.at_css('Name').content
-				country.Destinations = []				
-				dest = c.at_css('Destinations')
-				unless dest.nil? || dest.children.empty?
-					dest.css('Destination').each do |d|
-						destination = Destination.new
-						destination.ID = d.at_css('ID').content
-						destination.Name = d.at_css('Name').content
-						destination.Zones = []
-						zon = d.at_css('Zones')
-						unless zon.nil? || zon.children.empty? 
-							zon.css('Zone').each do |z|
-								zone = Zone.new
-								zone.ID = z.at_css('ID').content
-								zone.Name = z.at_css('Name').content
-								destination.Zones << zone
-							end
-						end
-						country.Destinations << destination
-					end
-				end
-				data << country
-			end
-			data
-		end
-
 		def parse_search_availability(search_availability, type: :string)
 			doc = to_nokogiri(search_availability, type)
 			if doc.at_css('MultiplesResults')
@@ -95,17 +63,28 @@ module Vuelandia
 				sad.Check_out_day_of_week = css_sad.at_css('Check_out_day_of_week').content
 				sad.Days = css_sad.at_css('Days').content
 				sad.RoomID = css_sad.at_css('RoomID').content
-				oc = Occupancy.new
-					css_oc = css_sad.at_css('Occupancy')
-					oc.Rooms = css_oc.at_css('Rooms').content
-					oc.Adults = css_oc.at_css('Adults').content
-					oc.Children = css_oc.at_css('Children').content
-				sad.Occupancy = oc
-				rn = RoomName.new
-					rn.numberOfRooms = css_sad.at_css('RoomName')['numberOfRooms']
-					rn.RoomID = css_sad.at_css('RoomName')['RoomID']
-					rn.Name = css_sad.at_css('RoomName').content
-				sad.RoomName = rn
+				sad.Occupancies = []
+				css_sad.css('Occupancy').each do |o|
+					oc = Occupancy.new
+						oc.Rooms = o.at_css('Rooms').content
+						oc.Adults = o.at_css('Adults').content
+						oc.Children = o.at_css('Children').content
+						oc.Ages = []
+						unless o.at_css('Ages').nil?
+							o.at_css('Ages').css('Age').each do |a|
+								o.Ages << a.content
+							end
+						end
+					sad.Occupancies << oc					
+				end
+				sad.RoomNames = []
+				css_sad.css('RoomName').each do |r|
+					rn = RoomName.new
+						rn.numberOfRooms = r['numberOfRooms']
+						rn.RoomID = r['RoomID']
+						rn.Name = r.content
+					sad.RoomNames << rn
+				end
 				sad.BoardID = css_sad.at_css('BoardID').content
 				sad.BoardName = css_sad.at_css('BoardName').content
 			data.SearchAvailabilityDetails = sad			
@@ -154,6 +133,42 @@ module Vuelandia
 					error.message = e.content
 					data.Errors << error
 				end
+			end
+			data
+		end
+
+		def parse_hotel_availability_details(hotel_availability_details, type)
+			doc = to_nokogiri(hotel_availability_details, type)
+		end
+
+		def parse_all_destinations_list(all_destinations_list, type: :string)
+			doc = to_nokogiri(all_destinations_list, type)
+			data = []
+			doc.css('Country').each do |c|
+				country = Country.new
+				country.ID = c.at_css('ID').content
+				country.Name = c.at_css('Name').content
+				country.Destinations = []				
+				dest = c.at_css('Destinations')
+				unless dest.nil? || dest.children.empty?
+					dest.css('Destination').each do |d|
+						destination = Destination.new
+						destination.ID = d.at_css('ID').content
+						destination.Name = d.at_css('Name').content
+						destination.Zones = []
+						zon = d.at_css('Zones')
+						unless zon.nil? || zon.children.empty? 
+							zon.css('Zone').each do |z|
+								zone = Zone.new
+								zone.ID = z.at_css('ID').content
+								zone.Name = z.at_css('Name').content
+								destination.Zones << zone
+							end
+						end
+						country.Destinations << destination
+					end
+				end
+				data << country
 			end
 			data
 		end
@@ -249,9 +264,9 @@ module Vuelandia
 						######Setting RoomType#######
 						rt = r.at_css('RoomType')
 						room_type = RoomType.new
-						room_type.ID = rt.at_css('ID').content
-						room_type.Name = rt.at_css('Name').content
-						room_type.NumberRooms = rt.at_css('NumberRooms').content
+							room_type.ID = rt.at_css('ID').content
+							room_type.Name = rt.at_css('Name').content
+							room_type.NumberRooms = rt.at_css('NumberRooms').content
 						am = rt.at_css('Amenities')
 						unless am.nil?
 							room_type.Amenities = []
