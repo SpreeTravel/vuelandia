@@ -68,9 +68,17 @@ Manually, via command line:
 			- `:datos`
 			- `:client`
 		- Optional
+			- `:language`
 			- `:company`
 			- `:comment`
 			- `:reference`
+- `perform_voucher`
+	- Parameters
+		- Required
+			- `bookingID`
+			- `seg`
+		- Optional
+			- `language`
 - `all_destinations_list`
 	- Parameters
 		- Optional

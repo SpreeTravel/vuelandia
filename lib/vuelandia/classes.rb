@@ -8,7 +8,7 @@ class IDName
 end
 ##########################################################################
 
-##################TO RETURN THE DATA FOR ALL DESTINATIONS LIST############
+################################TO PARSE ALL DESTINATIONS LIST############
 class Country 
 	include IdName
 	attr_accessor :Destinations
@@ -68,7 +68,7 @@ class Board
 end
 ###########################################################################################
 
-################TO RETURN THE DATA FOR ADDITIONAL INFORMATION##############################
+##############################TO PARSE ADDITIONAL INFORMATION##############################
 class AdditionalInformationParsed
 	attr_accessor :HotelDetails, :SearchAvailabilityDetails, :AgencyBalance, :AdditionalInformation,
 				  :PVP, :PriceAgency, :Rates	
@@ -115,7 +115,7 @@ class CancellationPeriod
 end
 
 class SupplementOrDiscount
-	attr_accessor :From, :To, :Obligatory, :Type, :Description, :Paxes_number, :Price, :PriceAgency
+	attr_accessor :id, :From, :To, :Obligatory, :Type, :Description, :Paxes_number, :Price, :PriceAgency
 end
 
 class Offer
@@ -189,6 +189,54 @@ end
 
 class DetailedRoom
 	attr_accessor :RoomType, :Boards
+end
+###########################################################################################
+
+########################TO PARSE THE VOUCHER###############################################
+class VoucherParsed
+	attr_accessor :id, :BookingStatus, :BookingModificationStatus, :Locator, :AgencyReference,
+				  :CreationDate, :CheckInDate, :CheckOutDate, :Price, :NetPrice, :CancellationFeeDate,
+				  :CancellationDate, :CancellationTime, :CancellationPrice, :CustomerName, :Hotel,
+				  :City, :Zone, :Destination, :Country, :Comments, :Payment, :Rooms, :Supplements,
+				  :Offers, :CancellationPolicies, :HotelAddress, :HotelZipCode, :HotelTelephoneNumber,
+				  :HotelMap, :HotelCategory, :ServiceProvider, :RetailAgency, :VoucherLogo, 
+				  :SecondVoucherLogo, :VoucherStamp, :PayableBy, :OtherFields
+end
+
+class Comment
+	attr_accessor :type, :fromdate, :todate
+end
+
+class VoucherRoom
+	attr_accessor :roomsnumber, :CheckInDate, :CheckOutDate, :Adults, :Children, :ChildAges,
+				  :Babies, :RoomType, :Amenities, :CompleRoomName, :BoardType, :Price
+end
+
+class CancellationPolicy < SupplementOrDiscount
+	attr_accessor :Time
+end 
+
+class ServiceProvider
+	include IdName
+	attr_accessor :FiscalIdentificationCode, :City, :Country, :Address, :ZipCode, :Email,
+				  :TelephoneNumbers, :FaxNumbers, :Logo
+end
+
+class TelephoneOrFaxNumber
+	attr_accessor :CountryCode, :Number
+end
+
+class RetailAgency
+	include IdName
+	attr_accessor :CustomerServiceTelephoneNumber, :CustomerServiceHours, :Logo, :VoucherStamp 
+end
+
+class PayableBy
+	attr_accessor :Name, :FiscalIdentificationCode
+end
+
+class OtherField
+	attr_accessor :Name, :Value
 end
 ###########################################################################################
 

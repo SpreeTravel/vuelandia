@@ -174,6 +174,11 @@ module Vuelandia
 			data
 		end
 
+		def parse_voucher(voucher, type: :string)
+			doc = to_nokogiri(voucher, type)
+
+		end
+
 		def parse_all_destinations_list(all_destinations_list, type: :string)
 			doc = to_nokogiri(all_destinations_list, type)
 			data = []
