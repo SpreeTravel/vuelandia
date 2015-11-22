@@ -115,7 +115,7 @@ class CancellationPeriod
 end
 
 class SupplementOrDiscount
-	attr_accessor :id, :From, :To, :Obligatory, :Type, :Description, :Paxes_number, :Price, :PriceAgency
+	attr_accessor :id, :paymenttype, :From, :To, :Obligatory, :Type, :Description, :Paxes_number, :Price, :PriceAgency
 end
 
 class Offer
@@ -204,7 +204,7 @@ class VoucherParsed
 end
 
 class Comment
-	attr_accessor :type, :fromdate, :todate
+	attr_accessor :type, :fromdate, :todate, :Text
 end
 
 class VoucherRoom

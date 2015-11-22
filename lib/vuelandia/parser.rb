@@ -176,7 +176,198 @@ module Vuelandia
 
 		def parse_voucher(voucher, type: :string)
 			doc = to_nokogiri(voucher, type)
-
+			data = VoucherParsed.new
+				css_doc = doc.at_css('Booking')
+				data.id = css_doc['id']
+				data.BookingStatus = css_doc.at_css('BookingStatus').content
+				unless css_doc.at_css('BookingModificationStatus').nil?
+					data.BookingModificationStatus = css_doc.at_css('BookingModificationStatus').content
+				end
+				unless css_doc.at_css('Locator').nil?
+					data.Locator = css_doc.at_css('Locator').content
+				end
+				unless css_doc.at_css('AgencyReference').nil?
+					data.AgencyReference = css_doc.at_css('AgencyReference').content
+				end
+				data.CreationDate = css_doc.at_css('CreationDate').content
+				data.CheckInDate = css_doc.at_css('CheckInDate').content
+				data.CheckOutDate = css_doc.at_css('CheckOutDate').content
+				data.Price = css_doc.at_css('Price').content
+				data.NetPrice = css_doc.at_css('NetPrice').content
+				unless css_doc.at_css('CancellationFeeDate').nil?
+					data.CancellationFeeDate = css_doc.at_css('CancellationFeeDate').content
+				end
+				unless css_doc.at_css('CancellationDate').nil?
+					data.CancellationDate = css_doc.at_css('CancellationDate').content
+				end
+				unless css_doc.at_css('CancellationTime').nil?
+					data.CancellationTime = css_doc.at_css('CancellationTime').content
+				end
+				unless css_doc.at_css('CancellationPrice').nil?
+					data.CancellationPrice = css_doc.at_css('CancellationPrice').content
+				end
+				data.CustomerName = css_doc.at_css('CustomerName').content
+				data.Hotel = IDName.new
+					data.Hotel.ID = css_doc.at_css('Hotel')['id']
+					data.Hotel.Name = css_doc.at_css('Hotel').content
+				data.City = css_doc.at_css('City').content
+				data.Zone = IDName.new
+					data.Zone.ID = css_doc.at_css('Zone')['id']
+					data.Zone.Name = css_doc.at_css('Zone').content
+				data.Destination = IDName.new
+					data.Destination.ID = css_doc.at_css('Destination')['id']
+					data.Destination.Name = css_doc.at_css('Destination').content
+				data.Country = IDName.new
+					data.Country.ID = css_doc.at_css('Country')['id']
+					data.Country.Name = css_doc.at_css('Country').content
+				data.Comments = []
+					css_doc.at_css('Comments').css('Comment').each do |c|
+						com = Comment.new
+						com.type = c['type']
+						com.fromdate = c['fromdate']
+						com.todate = c['todate']
+						com.Text = c.content
+						data.Comments << com
+					end
+				data.Payment = css_doc.at_css('Payment')['type']
+				data.Rooms = []
+					css_doc.at_css('Rooms').css('Room').each do |r|
+						room = VoucherRoom.new
+						room.roomsNumber = r['roomsNumber']
+						room.CheckInDate = r.at_css('CheckInDate').content
+						room.CheckOutDate = r.at_css('CheckOutDate').content
+						room.Adults = r.at_css('Adults')['number']
+						room.Children = r.at_css('Children')['number']
+						room.ChildAges = []
+							r.at_css('Children').css('Child').each do |ca|
+								room.ChildAges << ca['Age']
+							end
+						unless r.at_css('Babies').nil?
+							room.Babies = r.at_css('Babies')['number']
+						end
+						room.RoomType = IDName.new
+							room.RoomType.ID = r.at_css('RoomType')['id']
+							room.RoomType.Name = r.at_css('RoomType').content
+						room.Amenities = []
+							unless r.at_css('Amenities').nil?
+								r.at_css('Amenities').css('Amenity').each do |a|
+									am = IDName.new
+										am.ID = a['id']
+										am.Name = a.content
+									room.Amenities << am
+								end
+							end
+						room.CompleteRoomName = r.at_css('CompleteRoomName').content
+						room.BoardType = IDName.new
+							room.BoardType.ID = r.at_css('BoardType')['id']
+							room.BoardType.Name = r.at_css('BoardType').content
+						room.Price = r.at_css('Price')
+						data.Rooms << room
+					end
+				data.Supplements = []
+					unless css_doc.at_css('Supplements').nil?
+						css_doc.at_css('Supplements').css('Supplement').each do |s|
+							sup = SupplementOrDiscount.new
+							sup.id = s['id']
+							sup.Type = s['type']
+							sup.paymenttype = s['paymenttype']
+							sup.Obligatory = s['obligatory']
+							sup.From = s.at_css('FromDate').content
+							sup.To = s.at_css('ToDate').content
+							sup.Description = s.at_css('Description').content
+							sup.Price = s.at_css('Price').content
+							data.Supplements << sup
+						end
+					end
+				data.Offers = []
+					unless css_doc.at_css('Offers').nil?
+						css_doc.at_css('Offers').css('Offer').each do |o|
+							off = SupplementOrDiscount.new
+							off.id = o['id']
+							off.From = o.at_css('FromDate').content
+							off.To = o.at_css('ToDate').content
+							off.Description = o.at_css('Description').content
+							unless o.at_css('Price').nil?
+								off.Price = o.at_css('Price').content
+							end
+							data.Offers << off
+						end
+					end
+				data.CancellationPolicies = []
+					css_doc.at_css('CancellationPolicies').css('CancellationPolicy').each do |cp|
+						canc = CancellationPolicy.new
+						canc.From = cp.at_css('FromDate').content		
+						canc.To = cp.at_css('ToDate').content		
+						canc.Time = cp.at_css('Time').content		
+						canc.Price = cp.at_css('Price').content		
+						data.CancellationPolicies << canc
+					end
+				data.HotelAddress = css_doc.at_css('HotelAddress').content
+				data.HotelZipCode = css_doc.at_css('HotelZipCode').content
+				data.HotelTelephoneNumber = css_doc.at_css('HotelTelephoneNumber').content
+				unless css_doc.at_css('HotelMap').nil?
+					data.HotelMap = css_doc.at_css('HotelMap').content
+				end
+				data.HotelCategory = IDName.new
+					data.HotelCategory.ID = css_doc.at_css('HotelCategory')['id']
+					data.HotelCategory.Name = css_doc.at_css('HotelCategory').content
+				sp = ServiceProvider.new
+					css_sp = css_doc.at_css('ServiceProvider')
+					sp.ID = css_sp['id']
+					sp.Name = css_sp.at_css('Name').content
+					sp.FiscalIdentificationCode = css_sp.at_css('FiscalIdentificationCode').content
+					sp.City = css_sp.at_css('City').content
+					sp.Country = IDName.new
+						sp.Country.ID = css_sp.at_css('Country')['id']
+						sp.Country.Name = css_sp.at_css('Country').content
+					unless css_sp.at_css('Address').nil?
+						sp.Address = css_sp.at_css('Address').content
+					end
+					unless css_sp.at_css('ZipCode').nil?
+						sp.ZipCode = css_sp.at_css('ZipCode').content
+					end
+					sp.Email = css_sp.at_css('Email').content
+					sp.TelephoneNumbers = []
+						css_sp.css('TelephoneNumber').each do |tn|
+							tel = TelephoneOrFaxNumber.new
+							tel.CountryCode = tn.at_css('CountryCode').content
+							tel.Number = tn.at_css('Number').content
+							sp.TelephoneNumbers << tel
+						end
+					sp.FaxNumbers = []
+						css_sp.css('FaxNumber').each do |fn|
+							fax = TelephoneOrFaxNumber.new
+							fax.CountryCode = fn.at_css('CountryCode').content
+							fax.Number = fn.at_css('Number').content
+							sp.TelephoneNumbers << fax
+						end
+					unless css_sp.at_css('Logo').nil?
+						sp.Logo = css_sp.at_css('Logo').content
+					end
+				data.ServiceProvider = sp
+				ra = RetailAgency.new
+					css_ra = css_doc.at_css('RetailAgency')
+					ra.ID = css_ra['id']
+					ra.Name = css_ra.at_css('Name').content
+					ra.CustomerServiceTelephoneNumber = css_ra.at_css('CustomerServiceTelephoneNumber').content
+					ra.CustomerServiceHours = css_ra.at_css('CustomerServiceHours').content
+					ra.Logo = css_ra.at_css('Logo').content
+					ra.VoucherStamp = css_ra.at_css('VoucherStamp').content
+				data.RetailAgency = ra
+				data.VoucherLogo = css_doc.at_css('VoucherLogo').content
+				data.SecondVoucherLogo = css_doc.at_css('SecondVoucherLogo').content
+				data.VoucherStamp = css_doc.at_css('VoucherStamp').content
+				data.PayableBy = PayableBy.new
+					data.PayableBy.Name = css_doc.at_css('PayableBy').at_css('Name').content
+					data.PayableBy.FiscalIdentificationCode = css_doc.at_css('PayableBy').at_css('FiscalIdentificationCode').content
+				data.OtherFields = []
+					css_doc.at_css('OtherFields').css('Field').each do |f|
+						field = OtherField.new
+						field.Name = f.at_css('Name').content
+						field.Value = f.at_css('Value').content
+						data.OtherFields << field
+					end
+			data			
 		end
 
 		def parse_all_destinations_list(all_destinations_list, type: :string)
