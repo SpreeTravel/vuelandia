@@ -79,6 +79,14 @@ Manually, via command line:
 			- `seg`
 		- Optional
 			- `language`
+- `perform_booking_cancellation`
+	- Parameters
+		- Required
+			- `bookingID`
+			- `securityCode`
+		- Optional
+			- `language`
+			- `cancelConfirm`
 - `all_destinations_list`
 	- Parameters
 		- Optional
