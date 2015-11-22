@@ -240,3 +240,12 @@ class OtherField
 end
 ###########################################################################################
 
+
+##################TO PARSE THE BOOKING CANCELLATION########################################
+class BookingCancellationParsed
+	attr_accessor :BookingStatus, :HotelName, :BookingPrice, :CheckInDate, :CheckOutDate,
+				  :Rooms, :FechaAnulacionSinGastos, :CancellationPolicies, :CurrentCancellationPrice,
+				  :CancellationPrice, :Errors 
+end
+###########################################################################################
+
