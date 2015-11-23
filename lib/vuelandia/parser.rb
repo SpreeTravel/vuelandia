@@ -370,6 +370,78 @@ module Vuelandia
 			data			
 		end
 
+		def parse_booking_cancellation(booking_cancellation, type: :string)
+			doc = to_nokogiri(booking_cancellation, type)
+			data = BookingCancelationParsed.new
+				data.BookingStatus = doc.at_css('BookingStatus').content
+				data.HotelName = doc.at_css('HotelName').content
+				data.BookingPrice = doc.at_css('BookingPrice').content
+				data.CheckInDate = doc.at_css('CheckInDate').content
+				data.CheckOutDate = doc.at_css('CheckOutDate').content
+				data.Rooms = []
+					doc.at_css('Rooms').css('Room').each do |r|
+						room = VoucherRoom.new
+						room.roomsNumber = r['roomsNumber']
+						room.CheckInDate = r.at_css('CheckInDate').content
+						room.CheckOutDate = r.at_css('CheckOutDate').content
+						room.Adults = r.at_css('Adults')['number']
+						room.Children = r.at_css('Children')['number']
+						room.ChildAges = []
+							r.at_css('Children').css('Child').each do |ca|
+								room.ChildAges << ca['Age']
+							end
+						unless r.at_css('Babies').nil?
+							room.Babies = r.at_css('Babies')['number']
+						end
+						room.RoomType = IDName.new
+							room.RoomType.ID = r.at_css('RoomType')['id']
+							room.RoomType.Name = r.at_css('RoomType').content
+						room.Amenities = []
+							unless r.at_css('Amenities').nil?
+								r.at_css('Amenities').css('Amenity').each do |a|
+									am = IDName.new
+										am.ID = a['id']
+										am.Name = a.content
+									room.Amenities << am
+								end
+							end
+						room.CompleteRoomName = r.at_css('CompleteRoomName').content
+						room.BoardType = IDName.new
+							room.BoardType.ID = r.at_css('BoardType')['id']
+							room.BoardType.Name = r.at_css('BoardType').content
+						unless r.at_css('Offer').nil?
+							room.Offer = IDName.new
+							room.Offer.ID = r.at_css('Offer')['id']
+							room.Offer.Name = r.at_css('Offer').content
+						end
+						room.Price = r.at_css('Price')
+						data.Rooms << room
+					end
+				data.FechaAnulacionSinGastos = doc.at_css('FechaAnulacionSinGastos').content
+				data.CancellationPolicies = []
+					doc.at_css('CancellationPolicies').css('CancellationPolicy').each do |cp|
+						canc = CancellationPolicy.new
+						canc.From = cp.at_css('FromDate').content		
+						canc.Time = cp.at_css('Time').content		
+						canc.Price = cp.at_css('Price').content		
+						data.CancellationPolicies << canc
+					end
+				unless doc.at_css('CancellationPrice')
+					data.CurrentCancellationPrice = doc.at_css('CurrentCancellationPrice').content
+				end
+				unless doc.at_css('CancellationPrice')
+					data.CancellationPrice = doc.at_css('CancellationPrice').content
+				end
+				doc.at_css('ERROR').nil? ? data.ERROR = 0 : data.ERROR = 1
+				data.Errors = []
+				unless doc.at_css('Errors').nil?
+					doc.at_css('Errors').css('Error').each do |e|
+						data.Errors << e.content
+					end
+				end
+			data
+		end
+
 		def parse_all_destinations_list(all_destinations_list, type: :string)
 			doc = to_nokogiri(all_destinations_list, type)
 			data = []

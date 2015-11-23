@@ -183,6 +183,21 @@ module Vuelandia
       connection.perform_request
     end
 
+    def perform_booking_cancellation(bookingID:, securityCode:, cancelConfirm: :false, language: "ENG")
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.BookingCancellationRQ(:version => "2.0", :language => language){
+          xml.Request{
+            xml.BookingID_ bookingID
+            xml.SecurityCode_ securityCode            
+            xml.CancelConfirm_ 1 if cancelConfirm            
+          }
+        }
+      end
+      xml = builder.to_xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
+
     def perform_all_destinations_list(language: "ENG")
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.AllDestinationsListRQ(:version => "2.0", :language => language){

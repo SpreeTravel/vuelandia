@@ -209,7 +209,7 @@ end
 
 class VoucherRoom
 	attr_accessor :roomsnumber, :CheckInDate, :CheckOutDate, :Adults, :Children, :ChildAges,
-				  :Babies, :RoomType, :Amenities, :CompleRoomName, :BoardType, :Price
+				  :Babies, :RoomType, :Amenities, :CompleRoomName, :BoardType, :Price, :Offer
 end
 
 class CancellationPolicy < SupplementOrDiscount
@@ -237,6 +237,15 @@ end
 
 class OtherField
 	attr_accessor :Name, :Value
+end
+###########################################################################################
+
+
+##################TO PARSE THE BOOKING CANCELLATION########################################
+class BookingCancellationParsed
+	attr_accessor :BookingStatus, :HotelName, :BookingPrice, :CheckInDate, :CheckOutDate,
+				  :Rooms, :FechaAnulacionSinGastos, :CancellationPolicies, :CurrentCancellationPrice,
+				  :CancellationPrice, :ERROR, :Errors 
 end
 ###########################################################################################
 
