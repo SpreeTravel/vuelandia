@@ -524,6 +524,11 @@ module Vuelandia
 			data
 		end
 
+		def parse_hotel_list(hotel_list, type: :string)
+			doc = to_nokogiri(hotel_list, type)
+			
+		end
+
 		private
 		def to_nokogiri(document, type)
 			if type == :file
