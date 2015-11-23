@@ -87,6 +87,20 @@ Manually, via command line:
 		- Optional
 			- `language`
 			- `cancelConfirm`
+- `perform_booking_cancellation`
+	- Parameters
+		- Optional
+			- `language`
+			- `bookingID`
+			- `locator`
+			- `agencyReference`
+			- `bookingDateRange`
+			- `customerName`
+			- `hotelID`
+			- `hotelName`
+			- `bookingStatus`
+		- Info
+			- Parameters are optional, but there must be at least one present.
 - `all_destinations_list`
 	- Parameters
 		- Optional

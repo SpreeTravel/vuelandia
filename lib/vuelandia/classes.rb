@@ -249,3 +249,12 @@ class BookingCancellationParsed
 end
 ###########################################################################################
 
+######################TO PARSE BOOKING LIST################################################
+class BookingListParsed
+	attr_accessor :id, :BookingStatus, :BookingModificationStatus, :Locator, :AgencyReference,
+				  :CreationDate, :CheckInDate, :CheckOutDate, :Price, :NetPrice, :Comission,
+				  :TaxOfComission, :CancellationFeeDate, :CancellationDate, :CancellationTime,
+				  :CancellationPrice, :CustomerName, :Hotel, :City, :Zone, :Destination, :Country,
+end
+###########################################################################################
+
