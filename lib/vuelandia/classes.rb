@@ -180,7 +180,8 @@ class Note
 end
 
 class Service
-	attr_accessor :Type, :Name, :Value, :AdditionalCharges 
+	include IdName
+	attr_accessor :Type, :Value, :AdditionalCharges 
 end
 
 class Characteristic < Service 
@@ -249,3 +250,28 @@ class BookingCancellationParsed
 end
 ###########################################################################################
 
+######################TO PARSE BOOKING LIST################################################
+class BookingListParsed
+	attr_accessor :id, :BookingStatus, :BookingModificationStatus, :Locator, :AgencyReference,
+				  :CreationDate, :CheckInDate, :CheckOutDate, :Price, :NetPrice, :Commission,
+				  :TaxOfCommission, :CancellationFeeDate, :CancellationDate, :CancellationTime,
+				  :CancellationPrice, :CustomerName, :Hotel, :City, :Zone, :Destination, :Country,
+end
+###########################################################################################
+
+########################TO PARSE HOTEL LIST################################################
+class HotelListParsed
+	attr_accessor :HotelDetails, :Photos, :ServicesFacilities, :CharacteristicsFacilities
+end
+
+class HotelListDetails
+	include IdName
+	attr_accessor :Continent, :Country, :Destination, :Zone, :Province, :Categoy, :Description,
+				  :Address, :ZipCode, :City, :Phone, :Fax, :EMail, :URLWeb, :Situation, 
+				  :Latitud, :Longitud
+end
+
+class HotelListPhoto
+	attr_accessor :Type, :URLPhoto
+end
+###########################################################################################

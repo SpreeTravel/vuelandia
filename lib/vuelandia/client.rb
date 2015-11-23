@@ -208,5 +208,67 @@ module Vuelandia
       connection = Vuelandia::Connection.new(configuration, xml)
       connection.perform_request
     end
+
+    def perform_booking_list(language: "ENG", **args)
+      any_extra = false
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.BookingListRQ(:version => "2.0", :language => language){
+          xml.Request{
+            if args[:bookingID]
+              xml.BookingID_ args[:bookingID]
+              any_extra = true
+            end
+            if args[:locator]
+              xml.Locator_ args[:locator]
+              any_extra = true            
+            end
+            if args[:agencyReference]
+              xml.AgencyReference_ args[:agencyReference]
+              any_extra = true            
+            end
+            if args[:bookingDateRange]
+              xml.BookingDateRange(args[:bookingDateRange][:type]){
+                xml.FromDate_ args[:bookingDateRange][:fromDate]
+                xml.ToDate_ args[:bookingDateRange][:toDate]
+              }
+              any_extra = true            
+            end
+            if args[:customerName]
+              xml.CustomerName_ args[:customerName]
+              any_extra = true            
+            end
+            if args[:hotelID]
+              xml.HotelID_ args[:hotelID]
+              any_extra = true            
+            end
+            if args[:hotelName]
+              xml.HotelName_ args[:hotelName]
+              any_extra = true            
+            end
+            if args[:bookingStatus]
+              xml.BookingStatus_ args[:bookingStatus]
+              any_extra = true            
+            end
+          }
+        }
+      end
+      raise Exeption, 'At least one search parameter required.' unless any_extra
+      xml = builder.to_xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
+
+    def perform_hotel_list(zoneID:, language: "ENG")
+        builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.HotelListRQ(:version => "2.0", :language => language){
+          xml.Hotel{
+            xml.ZoneID_ zoneID
+          }
+        }
+      end
+      xml = builder.to_xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
   end
 end

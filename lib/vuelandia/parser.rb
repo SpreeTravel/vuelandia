@@ -474,6 +474,129 @@ module Vuelandia
 			data
 		end
 
+		def parse_booking_list(booking_list, type: :string)
+			doc = to_nokogiri(booking_list, type)
+			data = BookingListParsed.new
+				data.id = doc[:id]
+				data.BookingStatus = doc.at_css('BookingStatus').content
+				unless doc.at_css('BookingModificationStatus').nil?
+					data.BookingModificationStatus = doc.at_css('BookingModificationStatus').content
+				end
+				unless doc.at_css('Locator').nil?
+					data.Locator = doc.at_css('Locator').content
+				end
+				unless doc.at_css('AgencyReference').nil?
+					data.AgencyReference = doc.at_css('AgencyReference').content
+				end
+				data.CreationDate = doc.at_css('CreationDate').content
+				data.CheckInDate = doc.at_css('CheckInDate').content
+				data.CheckOutDate = doc.at_css('CheckOutDate').content
+				data.Price = doc.at_css('Price').content
+				data.NetPrice = doc.at_css('NetPrice').content
+				data.Commission = doc.at_css('Commission').content
+				data.TaxOfCommission = doc.at_css('TaxOfCommission').content
+				unless doc.at_css('CancellationFeeDate').nil?
+					data.CancellationFeeDate = doc.at_css('CancellationFeeDate').content
+				end
+				unless doc.at_css('CancellationDate').nil?
+					data.CancellationDate = doc.at_css('CancellationDate').content
+				end
+				unless doc.at_css('CancellationTime').nil?
+					data.CancellationTime = doc.at_css('CancellationTime').content
+				end
+				unless doc.at_css('CancellationPrice').nil?
+					data.CancellationPrice = doc.at_css('CancellationPrice').content
+				end
+				data.CustomerName = doc.at_css('CustomerName').content
+				data.Hotel = IDName.new
+					data.Hotel.ID = doc.at_css('Hotel')['id']
+					data.Hotel.Name = doc.at_css('Hotel').content
+				data.City = doc.at_css('City').content
+				data.Zone = IDName.new
+					data.Zone.ID = doc.at_css('Zone')['id']
+					data.Zone.Name = doc.at_css('Zone').content
+				data.Destination = IDName.new
+					data.Destination.ID = doc.at_css('Destination')['id']
+					data.Destination.Name = doc.at_css('Destination').content
+				data.Country = IDName.new
+					data.Country.ID = doc.at_css('Country')['id']
+					data.Country.Name = doc.at_css('Country').content
+			data
+		end
+
+		def parse_hotel_list(hotel_list, type: :string)
+			doc = to_nokogiri(hotel_list, type)
+			data = HotelListParsed.new
+				hd = HotelListDetails.new
+					css_hd = doc.at_css('HotelDetails')
+					hd.ID = css_hd.at_css('ID').content
+					hd.Name = css_hd.at_css('Name').content
+					hd.Continent = IDName.new
+						hd.Continent.ID = css_hd.at_css('Continent').at_css('ID').content
+						hd.Continent.Name = css_hd.at_css('Continent').at_css('Name').content
+					hd.Country = IDName.new
+						hd.Country.ID = css_hd.at_css('Country').at_css('ID').content
+						hd.Country.Name = css_hd.at_css('Country').at_css('Name').content
+					hd.Destination = IDName.new
+						hd.Destination.ID = css_hd.at_css('Destination').at_css('ID').content
+						hd.Destination.Name = css_hd.at_css('Destination').at_css('Name').content
+					hd.Zone = IDName.new
+						hd.Zone.ID = css_hd.at_css('Zone').at_css('ID').content
+						hd.Zone.Name = css_hd.at_css('Zone').at_css('Name').content
+					unless css_hd.at_css('Province').nil?
+						hd.Province = IDName.new
+						unless css_hd.at_css('Province').at_css('ID').nil?
+							hd.Province.ID = css_hd.at_css('Province').at_css('ID').content
+						end
+						unless css_hd.at_css('Province').at_css('Name').nil?
+							hd.Province.Name = css_hd.at_css('Province').at_css('Name').content
+						end
+					end
+					hd.Category = IDName.new
+						hd.Category.ID = css_hd.at_css('Category').at_css('ID').content
+						hd.Category.Name = css_hd.at_css('Category').at_css('Name').content
+					hd.Description = css_hd.at_css('Description').content
+					hd.Address = css_hd.at_css('Address').content
+					hd.ZipCode = css_hd.at_css('ZipCode').content
+					hd.City = css_hd.at_css('City').content
+					hd.Phone = css_hd.at_css('Phone').content
+					hd.Fax = css_hd.at_css('Fax').content
+					hd.EMail = css_hd.at_css('EMail').content
+					hd.URLWeb = css_hd.at_css('URLWeb').content
+					hd.Situation = css_hd.at_css('Situation').content
+					hd.Latitud = css_hd.at_css('Latitud').content
+					hd.Longitud = css_hd.at_css('Longitud').content
+				data.HotelDetails = hs
+				data.Photos = []
+					doc.at_css('Photos').css('Photo').each do |p|
+						photo = HotelListPhoto.new
+						photo.Type = p.at_css('Type').content
+						photo.URLPhoto = p.at_css('URLPhoto').content
+						data.Photos << photo
+					end
+				data.ServicesFacilities = []
+					doc.at_css('ServicesFacilities').css('Service').each do |s|
+						service = Service.new
+						service.ID = s.at_css('ID').content
+						service.Type = s.at_css('Type').content
+						service.Name = s.at_css('Name').content
+						service.Value = s.at_css('Value').content
+						service.AdditionalCharges = s.at_css('AdditionalCharges').content
+						data.ServicesFacilities << service
+					end
+				data.CharacteristicsFacilities = []
+					doc.at_css('CharacteristicsFacilities').css('Characteristic').each do |c|
+						service = Service.new
+						service.ID = c.at_css('ID').content
+						service.Type = c.at_css('Type').content
+						service.Name = c.at_css('Name').content
+						service.Value = c.at_css('Value').content
+						service.AdditionalCharges = c.at_css('AdditionalCharges').content
+						data.CharacteristicsFacilities << service
+					end
+			data
+		end
+
 		private
 		def to_nokogiri(document, type)
 			if type == :file
