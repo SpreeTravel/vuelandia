@@ -476,8 +476,54 @@ module Vuelandia
 
 		def parse_booking_list(booking_list, type: :string)
 			doc = to_nokogiri(booking_list, type)
+			data = BookingListParsed.new
+				data.id = doc[:id]
+				data.BookingStatus = doc.at_css('BookingStatus').content
+				unless doc.at_css('BookingModificationStatus').nil?
+					data.BookingModificationStatus = doc.at_css('BookingModificationStatus').content
+				end
+				unless doc.at_css('Locator').nil?
+					data.Locator = doc.at_css('Locator').content
+				end
+				unless doc.at_css('AgencyReference').nil?
+					data.AgencyReference = doc.at_css('AgencyReference').content
+				end
+				data.CreationDate = doc.at_css('CreationDate').content
+				data.CheckInDate = doc.at_css('CheckInDate').content
+				data.CheckOutDate = doc.at_css('CheckOutDate').content
+				data.Price = doc.at_css('Price').content
+				data.NetPrice = doc.at_css('NetPrice').content
+				data.Commission = doc.at_css('Commission').content
+				data.TaxOfCommission = doc.at_css('TaxOfCommission').content
+				unless doc.at_css('CancellationFeeDate').nil?
+					data.CancellationFeeDate = doc.at_css('CancellationFeeDate').content
+				end
+				unless doc.at_css('CancellationDate').nil?
+					data.CancellationDate = doc.at_css('CancellationDate').content
+				end
+				unless doc.at_css('CancellationTime').nil?
+					data.CancellationTime = doc.at_css('CancellationTime').content
+				end
+				unless doc.at_css('CancellationPrice').nil?
+					data.CancellationPrice = doc.at_css('CancellationPrice').content
+				end
+				data.CustomerName = doc.at_css('CustomerName').content
+				data.Hotel = IDName.new
+					data.Hotel.ID = doc.at_css('Hotel')['id']
+					data.Hotel.Name = doc.at_css('Hotel').content
+				data.City = doc.at_css('City').content
+				data.Zone = IDName.new
+					data.Zone.ID = doc.at_css('Zone')['id']
+					data.Zone.Name = doc.at_css('Zone').content
+				data.Destination = IDName.new
+					data.Destination.ID = doc.at_css('Destination')['id']
+					data.Destination.Name = doc.at_css('Destination').content
+				data.Country = IDName.new
+					data.Country.ID = doc.at_css('Country')['id']
+					data.Country.Name = doc.at_css('Country').content
+			data
 		end
-		
+
 		private
 		def to_nokogiri(document, type)
 			if type == :file
