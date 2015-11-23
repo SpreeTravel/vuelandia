@@ -198,6 +198,17 @@ module Vuelandia
       connection.perform_request
     end
 
+    def perform_all_destinations_list(language: "ENG")
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.AllDestinationsListRQ(:version => "2.0", :language => language){
+          xml.AllDestinations
+        }
+      end
+      xml = builder.to_xml
+      connection = Vuelandia::Connection.new(configuration, xml)
+      connection.perform_request
+    end
+
     def perform_booking_list(language: "ENG", **args)
       any_extra = false
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
@@ -247,10 +258,12 @@ module Vuelandia
       connection.perform_request
     end
 
-    def perform_all_destinations_list(language: "ENG")
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.AllDestinationsListRQ(:version => "2.0", :language => language){
-          xml.AllDestinations
+    def perform_hotel_list(zoneID:, language: "ENG")
+        builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.HotelListRQ(:version => "2.0", :language => language){
+          xml.Hotel{
+            xml.ZoneID_ zoneID
+          }
         }
       end
       xml = builder.to_xml

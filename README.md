@@ -87,7 +87,11 @@ Manually, via command line:
 		- Optional
 			- `language`
 			- `cancelConfirm`
-- `perform_booking_cancellation`
+- `perform_all_destinations_list`
+	- Parameters
+		- Optional
+			- `:language`
+- `perform_booking_list`
 	- Parameters
 		- Optional
 			- `language`
@@ -101,8 +105,10 @@ Manually, via command line:
 			- `bookingStatus`
 		- Info
 			- Parameters are optional, but there must be at least one present.
-- `all_destinations_list`
+- `perform_hotel_list`
 	- Parameters
+		- Required
+			- `zoneID`
 		- Optional
 			- `:language`
 
