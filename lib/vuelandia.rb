@@ -1,2 +1,2 @@
-require_relative 'lib/vuelandia/client'
-require_relative 'lib/vuelandia/parser'
+require_relative 'vuelandia/client'
+require_relative 'vuelandia/parser'
