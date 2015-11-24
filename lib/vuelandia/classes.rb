@@ -255,7 +255,7 @@ class BookingListParsed
 	attr_accessor :id, :BookingStatus, :BookingModificationStatus, :Locator, :AgencyReference,
 				  :CreationDate, :CheckInDate, :CheckOutDate, :Price, :NetPrice, :Commission,
 				  :TaxOfCommission, :CancellationFeeDate, :CancellationDate, :CancellationTime,
-				  :CancellationPrice, :CustomerName, :Hotel, :City, :Zone, :Destination, :Country,
+				  :CancellationPrice, :CustomerName, :Hotel, :City, :Zone, :Destination, :Country
 end
 ###########################################################################################
 
