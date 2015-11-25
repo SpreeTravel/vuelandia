@@ -752,7 +752,9 @@ module Vuelandia
 			data.obj = doc.at_css('obj').content
 			data.TotalDestinationHotels = doc.at_css('TotalDestinationHotels').content
 			data.AvailablesHotel = doc.at_css('AvailablesHotel').content
-			data.SessionID = doc.at_css('SessionID').content
+			if doc.at_css('SessionID')
+				data.SessionID = doc.at_css('SessionID').content
+			end
 			if data.AvailablesHotel.to_i > 0
 				data.Hotels = []
 				#######Iterating over the hotels########
