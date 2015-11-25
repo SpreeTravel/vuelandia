@@ -119,8 +119,15 @@ Manually, via command line:
 		proxy = { address: "proxy-address", port: 3128, user: "proxy-user", password: "proxy-password" }	
 		client = Vuelandia::Client.new(user: "user", password: "pass", proxy: proxy) 
 		
-		occupancy1 = Occupancy.new(Rooms: 1, Adults: 2, Children: 1, ChildAges: [5])
-		occupancy2 = Occupancy.new(Rooms: 2, Adults: 3, Children: 0)
+		occupancy1 = Occupancy.new
+		occupancy1.Rooms = 1
+		occupancy1.Adults = 2
+		occupancy1.Children = 1
+		occupancy1.ChildAges = [5]
+		occupancy2 = Occupancy.new
+		occupancy2.Rooms = 2
+		occupancy2.Adults = 3
+		occupancy2.Children = 0
 		response = client.perform_search_availability(destination: "Madrid", check_in_date: "2016-1-5", check_out_date: "2016-1-10", occupancies: [occupancy1, occupancy2])
 
 		#since the response is a Net::HTTPResponse instance, you could do something like
